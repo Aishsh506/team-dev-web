@@ -1,20 +1,259 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>InTime 2.0</title>
-        <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-        crossorigin="anonymous">
-    </head>
-    <body>
-        
-    </body>
-    <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-    crossorigin="anonymous"></script>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>InTime 2.0</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+			crossorigin="anonymous"
+		/>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg bg-body-tertiary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">Расписание</a>
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarScroll"
+					aria-controls="navbarScroll"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarScroll">
+					<ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="#"
+								>Главная</a
+							>
+						</li>
+						<li class="nav-item dropdown">
+							<a
+								class="nav-link dropdown-toggle"
+								href="#"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+							>
+								Группы
+							</a>
+
+							<form class="dropdown-menu px-4 py-3 mt-2">
+								<label for="groupDataList" class="form-label mb-3 ms-2"
+									>Группа:</label
+								>
+								<input
+									class="form-control"
+									list="groupsdatalistOptions"
+									id="groupDataList"
+									placeholder="Номер группы"
+								/>
+
+								<datalist id="groupsdatalistOptions">
+									<option value="972101"></option>
+									<option value="972102"></option>
+									<option value="972103"></option>
+									<option value="972201"></option>
+									<option value="972202"></option>
+								</datalist>
+								<input
+									class="btn btn-primary mt-2"
+									type="submit"
+									value="Показать расписание"
+								/>
+							</form>
+						</li>
+						<li class="nav-item dropdown">
+							<a
+								class="nav-link dropdown-toggle"
+								href="#"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+							>
+								Преподователи
+							</a>
+							<form class="dropdown-menu px-4 py-3 mt-2">
+								<label for="teacherDataList" class="form-label mb-3 ms-2"
+									>Преподаватель:</label
+								>
+								<input
+									class="form-control"
+									list="teachersdatalistOptions"
+									id="teacherDataList"
+									placeholder="ФИО Преподавателя"
+								/>
+
+								<datalist id="teachersdatalistOptions">
+									<option value="Абдрашитов Сергей Владимирович"></option>
+									<option value="Борщь Владислав"></option>
+									<option value="Иванов Сергей Николаевич "></option>
+									<option value="Блинов Борис Владимирович"></option>
+									<option value="Фролов Андрей Олегович"></option>
+								</datalist>
+								<input
+									class="btn btn-primary mt-2"
+									type="submit"
+									value="Показать расписание"
+								/>
+							</form>
+						</li>
+						<li class="nav-item dropdown">
+							<a
+								class="nav-link dropdown-toggle"
+								href="#"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+							>
+								Аудитории
+							</a>
+							<form class="dropdown-menu px-4 py-3 mt-2">
+								<label for="buidlingDataList" class="form-label mt-3 ms-2"
+									>Корпус:</label
+								>
+								<input
+									class="form-control"
+									list="buidlingsdatalistOptions"
+									id="buidlingDataList"
+									placeholder="Номер корпуса"
+								/>
+
+								<datalist id="buidlingsdatalistOptions">
+									<option value="12 корпус"></option>
+									<option value="17 корпус"></option>
+									<option value="21 корпус "></option>
+									<option value="30 корпус"></option>
+									<option value="33 корпус"></option>
+								</datalist>
+
+								<label for="roomDataList" class="form-label mt-3 ms-2"
+									>Аудитория:</label
+								>
+								<input
+									class="form-control"
+									list="roomsdatalistOptions"
+									id="roomDataList"
+									placeholder="Номер аудитории"
+								/>
+
+								<datalist id="roomsdatalistOptions">
+									<option value="123"></option>
+									<option value="178"></option>
+									<option value="211 "></option>
+									<option value="302"></option>
+									<option value="332"></option>
+								</datalist>
+
+								<input
+									class="btn btn-primary my-3"
+									type="submit"
+									value="Показать расписание"
+								/>
+							</form>
+						</li>
+					</ul>
+
+					<button class="btn btn-outline-secondary me-2" type="submit">
+						Выйти
+					</button>
+				</div>
+			</div>
+		</nav>
+		<div class="mt-3">
+			<container class="container-fluid">
+				<div class="d-flex justify-content-center">
+					<button
+						class="btn btn-lg btn-outline-primary"
+						style="width: 40%"
+						data-bs-toggle="modal"
+						data-bs-target="#exampleModal"
+					>
+						Изменить роль
+					</button>
+
+					<div
+						class="modal fade"
+						id="exampleModal"
+						tabindex="-1"
+						aria-labelledby="exampleModalLabel"
+						aria-hidden="true"
+					>
+						<div class="modal-dialog modal-lg modal-dialog-centered">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h1 class="modal-title fs-5" id="exampleModalLabel">
+										Изменение роли
+									</h1>
+									<button
+										type="button"
+										class="btn-close"
+										data-bs-dismiss="modal"
+										aria-label="Close"
+									></button>
+								</div>
+
+								<div class="modal-body d-flex flex-row mx-2">
+									<div class="flex-grow-1 me-4">
+										<label for="loginDataList" class="form-label mt-3 ms-2"
+											>Логин:</label
+										>
+										<input
+											class="form-control"
+											list="loginsdatalistOptions"
+											id="loginDataList"
+											placeholder="Логин пользователя"
+										/>
+
+										<datalist id="loginsdatalistOptions">
+											<option value="cucuruser@yandex.ru"></option>
+											<option value="abobus2003@mail.ru"></option>
+											<option value="BibaAndBoba@gmail.com"></option>
+											<option value="biba@yandex.ru"></option>
+											<option value="boba@mail.ru"></option>
+										</datalist>
+									</div>
+									<div>
+										<label for="roleSelect" class="form-label mt-3 ms-2"
+											>Роль:</label
+										>
+										<select
+											class="form-select"
+											aria-label="Default select example"
+											id="roleSelect"
+										>
+											<option selected value="student">Студент</option>
+											<option value="admin">Администратор</option>
+											<option value="teacher">Преподаватель</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="modal-footer mx-2">
+									<button
+										type="button"
+										class="btn btn-secondary mx-2"
+										data-bs-dismiss="modal"
+									>
+										Закрыть
+									</button>
+									<button type="button" class="btn btn-primary">
+										Сохранить
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</container>
+		</div>
+	</body>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+		crossorigin="anonymous"
+	></script>
 </html>
