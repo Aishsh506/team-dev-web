@@ -30,28 +30,40 @@
         </nav>
         <div class="container">
             <h4><span id="weekStart">...</span> - <span id="weekEnd">...</span></h4>
-            <table class="table table-bordered" id="table">
-                <thead>
-                    <tr>
-                        <td></td>
-                        <th scope="col">Пн</th>
-                        <th scope="col">Вт</th>
-                        <th scope="col">Ср</th>
-                        <th scope="col">Чт</th>
-                        <th scope="col">Пт</th>
-                        <th scope="col">Сб</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><th scope="row"><time>8:45</time></th></tr>
-                    <tr><th scope="row"><time>10:35</time></th></tr>
-                    <tr><th scope="row"><time>12:25</time></th></tr>
-                    <tr><th scope="row"><time>14:45</time></th></tr>
-                    <tr><th scope="row"><time>16:35</time></th></tr>
-                    <tr><th scope="row"><time>18:25</time></th></tr>
-                    <tr><th scope="row"><time>20:15</time></th></tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="table">
+                    <caption>Время пар указано по томскому времени (UTC+7:00)</caption>
+                    <thead>
+                        <tr>
+                            <td class="align-top">
+                                <div class="card d-none card-success border-success text-success" style="cursor: pointer;" id="lessonCard">
+                                    <div class="card-body p-2 fs-6">
+                                        <h5 class="subject card-title">Название пары</h5>
+                                        <div class="room">Корпус, аудитория</div>
+                                        <div class="group">Группа</div>
+                                        <div class="teacher">Преподаватель</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <th scope="col" style="min-width: 180px">Пн</th>
+                            <th scope="col" style="min-width: 180px">Вт</th>
+                            <th scope="col" style="min-width: 180px">Ср</th>
+                            <th scope="col" style="min-width: 180px">Чт</th>
+                            <th scope="col" style="min-width: 180px">Пт</th>
+                            <th scope="col" style="min-width: 180px">Сб</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row"><time>8:45 - 10:20</time></th></tr>
+                        <tr><th scope="row"><time>10:35 - 12:10</time></th></tr>
+                        <tr><th scope="row"><time>12:25 - 14:00</time></th></tr>
+                        <tr><th scope="row"><time>14:45 - 16:20</time></th></tr>
+                        <tr><th scope="row"><time>16:35 - 18:10</time></th></tr>
+                        <tr><th scope="row"><time>18:25 - 20:00</time></th></tr>
+                        <tr><th scope="row"><time>20:15 - 21:50</time></th></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </body>
     <script

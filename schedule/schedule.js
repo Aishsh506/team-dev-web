@@ -4,7 +4,7 @@ Date.prototype.addDays = function(days) {
     return date;
 }
 
-function addMinutes(date, minutes) {
+/*function addMinutes(date, minutes) {
     return new Date(date.getTime() + minutes*60000);
 }
 
@@ -16,13 +16,16 @@ function TomskToLocalHours(TomskHours) {
 
 function padTo2Digits(num) {
     return String(num).padStart(2, '0');
-}
+}*/
+
+let lessonCard = $("#lessonCard");
 
 $(document).ready(function() {
     const searchParams = new Proxy(new URLSearchParams(window.location.search), {
         get: (searchParams, prop) => searchParams.get(prop),
         });
     GenerateTable(parseInt(searchParams.week));
+    DisplayLesson({ id: "dsflkjsd", subject: "dfosnfd"}, 4);
 })
 
 function GenerateTable(week) {
@@ -33,7 +36,7 @@ function GenerateTable(week) {
     weekDate = weekDate.addDays(7 * week);
     weekStart = (weekDate.addDays(1 - weekDate.getDay()));
 
-    //заполнение названия недели
+    //заполнение дат начала и конца недели
     $("#weekStart").text(new Intl.DateTimeFormat('ru', { dateStyle:"long"}).format(weekStart));
     $("#weekEnd").text(new Intl.DateTimeFormat('ru', { dateStyle:"long"}).format(weekStart.addDays(5)));
 
@@ -52,7 +55,7 @@ function GenerateTable(week) {
         }
     })
 
-    //перевод времени пар с Томского времени в местное
+    /*//перевод времени пар с Томского времени в местное
     $("tbody th").each(function() {
         startTime = new Date();
         startTime.setUTCHours($(this).text().split(":")[0] - 7);
@@ -60,5 +63,13 @@ function GenerateTable(week) {
         endTime = addMinutes(startTime, 95);
         $(this).text(startTime.getHours() + ":" + padTo2Digits(startTime.getMinutes())
             + " - " + endTime.getHours() + ":" + padTo2Digits(endTime.getMinutes()));
-    })
+    })*/
+}
+
+function DisplayLesson(lessonDTO, weekDay) {
+    newLessonCard = lessonCard.clone();
+    newLessonCard.appendTo($("#lesson0-" + weekDay))
+    newLessonCard.removeClass("d-none");
+    newLessonCard.attr("id", lessonDTO.id);
+    newLessonCard.find(".subject").text(lessonDTO.subject);
 }
