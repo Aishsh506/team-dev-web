@@ -9,6 +9,18 @@
         rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
         crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+        <script
+        src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+        crossorigin="anonymous"></script>
+        <script
+        type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     </head>
     <body>
         <nav class="navbar bg-body-tertiary">
@@ -64,15 +76,72 @@
                     </tbody>
                 </table>
             </div>
+            <div class="btn-group dropup">
+                <button
+                type="button"
+                class="position-fixed bottom-0 end-0 shadow btn btn-success rounded-circle m-2 m-md-5"
+                data-bs-toggle="dropdown"
+                data-bs-offset="0,10"
+                style="width: 65px; height: 65px">
+                    <div class="fs-1" style="margin-top: -9px">+</div>
+                </button>
+                <ul class="dropdown-menu border-4">
+                    <li><h6 class="dropdown-header">Добавить</h6></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#addLessonModal">
+                            Пару
+                        </button>
+                    </li>
+                    <li><button class="dropdown-item">Дисциплину</button></li>
+                    <li><button class="dropdown-item disabled">Корпус</button></li>
+                    <li><button class="dropdown-item disabled">Аудиторию</button></li>
+                    <li><button class="dropdown-item">Группу</button></li>
+                    <li><button class="dropdown-item">Преподавателя</button></li>
+                </ul>
+            </div>
+            
+            <div id="modals">
+                <div class="modal fade" id="newModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5"></h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                <button type="button" class="btn btn-primary">Сохранить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="addLesson">
+                <div class="mb-3 select-input">
+                    <label for="teacherSelect" class="form-label"><b>Преподаватель</b></label>
+                    <select class="form-select" id="teacherSelect" disabled>
+                    </select>
+                </div>
+                <div class="mb-3 date-input">
+                    <label for="dateInput" class="form-label"><b>Дата</b></label>
+                    <input type="text" class="form-control datepicker" id ="dateInput" autocomplete="off" required>
+                </div>
+                <div class="mb-3 form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="repeatLessonCheck" onchange="ToggleEndDatePicker()">
+                    <label class="form-check-label" for="repeatLessonCheck">
+                        Повторять пару каждую неделю
+                    </label>
+                </div>
+                <div class="mb-3 d-none">
+                    <label for="endDateInput" class="form-label"><b>Повторять пару до</b></label>
+                    <input type="text" class="form-control datepicker" id="endDateInput" autocomplete="off">
+                </div>
+            </form>
         </div>
     </body>
-    <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-    crossorigin="anonymous"></script>
-    <script
-    src="https://code.jquery.com/jquery-3.6.3.js"
-    integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
-    crossorigin="anonymous"></script>
     <script src="schedule.js"></script>
+    <script src="forms.js"></script>
 </html>

@@ -4,28 +4,11 @@ Date.prototype.addDays = function(days) {
     return date;
 }
 
-/*function addMinutes(date, minutes) {
-    return new Date(date.getTime() + minutes*60000);
-}
-
-function TomskToLocalHours(TomskHours) {
-    date = new Date();
-    date.setUTCHours(TomskHours - 7);
-    return date;
-}
-
-function padTo2Digits(num) {
-    return String(num).padStart(2, '0');
-}*/
-
-let lessonCard = $("#lessonCard");
-
 $(document).ready(function() {
     const searchParams = new Proxy(new URLSearchParams(window.location.search), {
         get: (searchParams, prop) => searchParams.get(prop),
         });
     GenerateTable(parseInt(searchParams.week));
-    DisplayLesson({ id: "dsflkjsd", subject: "dfosnfd"}, 4);
 })
 
 function GenerateTable(week) {
@@ -54,16 +37,6 @@ function GenerateTable(week) {
             $(`<td id="lesson${timeslot}-${weekDay}"></td>`).appendTo(this);
         }
     })
-
-    /*//перевод времени пар с Томского времени в местное
-    $("tbody th").each(function() {
-        startTime = new Date();
-        startTime.setUTCHours($(this).text().split(":")[0] - 7);
-        startTime.setMinutes($(this).text().split(":")[1]);
-        endTime = addMinutes(startTime, 95);
-        $(this).text(startTime.getHours() + ":" + padTo2Digits(startTime.getMinutes())
-            + " - " + endTime.getHours() + ":" + padTo2Digits(endTime.getMinutes()));
-    })*/
 }
 
 function DisplayLesson(lessonDTO, weekDay) {
