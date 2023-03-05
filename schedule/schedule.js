@@ -3,7 +3,7 @@ $(document).ready(function() {
         get: (searchParams, prop) => searchParams.get(prop),
         });
     GenerateTable(parseInt(searchParams.week));
-    DisplayLesson( {id: "dfsfsfl", subject: "Math"}, 5 );
+    DisplayLesson( {id: "dfsfsfl", subject: "1", timeslot: 2, endDate: null}, 2 );
 })
 
 function GenerateTable(week) {
@@ -47,9 +47,22 @@ function GenerateTable(week) {
 
 function DisplayLesson(lessonDTO, weekDay) {
     newLessonCard = $("#lessonCard").clone();
+
     newLessonCard.attr("id", lessonDTO.id);
-    newLessonCard.find(".subject").text(lessonDTO.subject);
-    newLessonCard.appendTo($("#lesson0-" + weekDay))
-    $("#lesson0-" + weekDay).append(newLessonCard).removeClass("empty-cell");
+    newLessonCard.find(".subject").text(subjectMap.get(lessonDTO.subject));
+    newLessonCard.find(".room").text(buildingMap.get(lessonDTO.building) + ',' + roomMap.get(lessonDTO.room));
+    newLessonCard.find(".group").text(groupMap.get(lessonDTO.group));
+    newLessonCard.find(".teacher").text(teacherMap.get(lessonDTO.teacher));
+
+    newLessonCard.data("subject", lessonDTO.subject);
+    newLessonCard.data("building", lessonDTO.building);
+    newLessonCard.data("room", lessonDTO.room);
+    newLessonCard.data("group", lessonDTO.group);
+    newLessonCard.data("teacher", lessonDTO.teacher);
+    newLessonCard.data("week-day", weekDay);
+    newLessonCard.data("timeslot", lessonDTO.timeslot);
+    newLessonCard.data("end-date", lessonDTO.endDate);
+    
+    $(`#lesson${lessonDTO.timeslot}-${weekDay}`).append(newLessonCard).removeClass("empty-cell");
     newLessonCard.removeClass("d-none");
 }

@@ -35,7 +35,23 @@ function LessonForm()
     })
     selectInput.clone().insertAfter(addLessonForm.find(".date-input"))
 
-    addLessonForm.find('.datepicker').datepicker({
+    modal = $("#newModal").clone().attr("id", "addLessonModal").appendTo("#modals");
+    modal.find("h1").text("Добавить пару");
+    modal.find(".modal-body").append(addLessonForm);
+
+    modal = modal.clone().appendTo("#modals").attr("id", "editLessonModal");
+    modal.find("h1").text("Редактировать пару");
+    modal.find("#addLesson").attr("id", "editLesson");
+    modal.find("#repeatLessonCheckAdd").attr("onclick", "ToggleEndDatePicker('Edit')");
+
+    modal.find("#editLesson").children().each(function() {
+        inputLabel = $(this).find("label");
+        input = $(this).find("input, select");
+        inputLabel.attr("for", inputLabel.attr("for").slice(0, -3) + "Edit");
+        input.attr("id", input.attr("id").slice(0, -3) + "Edit");
+    })
+
+    $('.datepicker').datepicker({
         format: dateFormat,
         weekStart: 1,
         startDate: "0d",
@@ -46,27 +62,42 @@ function LessonForm()
         disableTouchKeyboard: true,
         language: 'ru'
     });
-
-    modal = $("#newModal").clone().attr("id", "addLessonModal").appendTo("#modals");
-    modal.find("h1").text("Добавить пару");
-    modal.find(".modal-body").append(addLessonForm);
 }
 
-function ToggleEndDatePicker()
+function ToggleEndDatePicker(form)
 {
-    if ($("#repeatLessonCheckAdd").prop("checked")) {
-        $("#endDateInputAdd").parent().removeClass("d-none");
+    if ($("#repeatLessonCheck" + form).prop("checked")) {
+        $("#endDateInput" + form).parent().removeClass("d-none");
     } else {
-        $("#endDateInputAdd").parent().addClass("d-none");
+        $("#endDateInput" + form).parent().addClass("d-none");
     }
 }
 
 function FillInDateTime(date = "", timeslot = 0)
 {
     if (date == "") {
-        addLessonForm.find("#dateInputAdd").val("");
+        $("#dateInputAdd").val("");
     } else {
-        addLessonForm.find("#dateInputAdd").datepicker("setDate", new Date(date));
+        $("#dateInputAdd").datepicker("setDate", new Date(date));
     }
-    addLessonForm.find("#timeslotSelectAdd").val(timeslot);
+    $("#timeslotSelectAdd").val(timeslot);
+}
+
+function FillInLessonDetails(lessonCard)
+{
+    lessonCard = $(lessonCard);
+    endDate = lessonCard.data("end-date");
+    endDate = endDate == null ? null : new Date(endDate);
+
+    activeLessonId = lessonCard.attr("id");
+    $("#subjectSelectEdit").val(lessonCard.data("subject"));
+    $("#buildingSelectEdit").val(lessonCard.data("building"));
+    $("#roomSelectEdit").val(lessonCard.data("room"));
+    $("#groupSelectEdit").val(lessonCard.data("group"));
+    $("#teacherSelectEdit").val(lessonCard.data("teacher"));
+    $("#dateInputEdit").datepicker("setDate", weekStart.addDays(lessonCard.data("week-day") - 1));
+    $("#timeslotSelectEdit").val(lessonCard.data("timeslot"));
+    $("#repeatLessonCheckEdit").prop("checked", endDate != null);
+    ToggleEndDatePicker("Edit");
+    $("#endDateInputEdit").datepicker("setDate", endDate);
 }

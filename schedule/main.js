@@ -2,7 +2,6 @@ let activeLessonId;
 let weekStart;
 
 const dateFormat = "dd.mm.yy";
-
 const timeslots = [
     "8:45 - 10:20",
     "10:35 - 12:10",
@@ -12,6 +11,12 @@ const timeslots = [
     "18:25 - 20:00",
     "20:15 - 21:50"
 ]
+const subjectMap = new Map();
+subjectMap.set("1", "Math");
+const buildingMap = new Map();
+const roomMap = new Map();
+const groupMap = new Map();
+const teacherMap = new Map();
 
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());

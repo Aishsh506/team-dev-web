@@ -48,7 +48,13 @@
                     <thead>
                         <tr>
                             <td class="align-top">
-                                <div class="card d-none card-success border-success text-success" style="cursor: pointer;" id="lessonCard">
+                                <div
+                                class="card d-none card-success border-success text-success"
+                                style="cursor: pointer;"
+                                id="lessonCard"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editLessonModal"
+                                onClick="FillInLessonDetails(this)">
                                     <div class="card-body p-2 fs-6">
                                         <h5 class="subject card-title">Название пары</h5>
                                         <div class="room">Корпус, аудитория</div>
@@ -142,7 +148,7 @@
                     <input type="text" class="form-control datepicker" id ="dateInputAdd" autocomplete="off" required>
                 </div>
                 <div class="mb-3 form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="repeatLessonCheckAdd" onchange="ToggleEndDatePicker()">
+                    <input class="form-check-input" type="checkbox" role="switch" id="repeatLessonCheckAdd" onchange="ToggleEndDatePicker('Add')">
                     <label class="form-check-label" for="repeatLessonCheckAdd">
                         Повторять пару каждую неделю
                     </label>
