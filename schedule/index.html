@@ -56,6 +56,17 @@
                                         <div class="teacher">Преподаватель</div>
                                     </div>
                                 </div>
+                                <button
+                                    type="button"
+                                    data-date=""
+                                    data-timeslot=""
+                                    class="plus container-fluid btn btn-light d-none rounded-circle my-0 mx-auto"
+                                    style="width: 65px; height: 65px"
+                                    id="plus"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#addLessonModal">
+                                        <div class="fs-1" style="margin-top: -9px">+</div>
+                                </button>
                             </td>
                             <th scope="col" style="min-width: 180px">Пн</th>
                             <th scope="col" style="min-width: 180px">Вт</th>
@@ -82,7 +93,8 @@
                 class="position-fixed bottom-0 end-0 shadow btn btn-success rounded-circle m-2 m-md-5"
                 data-bs-toggle="dropdown"
                 data-bs-offset="0,10"
-                style="width: 65px; height: 65px">
+                style="width: 65px; height: 65px"
+                onclick="FillInDateTime()">
                     <div class="fs-1" style="margin-top: -9px">+</div>
                 </button>
                 <ul class="dropdown-menu border-4">
@@ -121,27 +133,28 @@
 
             <form id="addLesson">
                 <div class="mb-3 select-input">
-                    <label for="teacherSelect" class="form-label"><b>Преподаватель</b></label>
-                    <select class="form-select" id="teacherSelect" disabled>
+                    <label for="teacherSelectAdd" class="form-label"><b>Преподаватель</b></label>
+                    <select class="form-select" id="teacherSelectAdd" disabled>
                     </select>
                 </div>
                 <div class="mb-3 date-input">
-                    <label for="dateInput" class="form-label"><b>Дата</b></label>
-                    <input type="text" class="form-control datepicker" id ="dateInput" autocomplete="off" required>
+                    <label for="dateInputAdd" class="form-label"><b>Дата</b></label>
+                    <input type="text" class="form-control datepicker" id ="dateInputAdd" autocomplete="off" required>
                 </div>
                 <div class="mb-3 form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="repeatLessonCheck" onchange="ToggleEndDatePicker()">
-                    <label class="form-check-label" for="repeatLessonCheck">
+                    <input class="form-check-input" type="checkbox" role="switch" id="repeatLessonCheckAdd" onchange="ToggleEndDatePicker()">
+                    <label class="form-check-label" for="repeatLessonCheckAdd">
                         Повторять пару каждую неделю
                     </label>
                 </div>
                 <div class="mb-3 d-none">
-                    <label for="endDateInput" class="form-label"><b>Повторять пару до</b></label>
-                    <input type="text" class="form-control datepicker" id="endDateInput" autocomplete="off">
+                    <label for="endDateInputAdd" class="form-label"><b>Повторять пару до</b></label>
+                    <input type="text" class="form-control datepicker" id="endDateInputAdd" autocomplete="off">
                 </div>
             </form>
         </div>
     </body>
+    <script src="main.js"></script>
     <script src="schedule.js"></script>
     <script src="forms.js"></script>
 </html>

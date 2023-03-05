@@ -1,64 +1,42 @@
-const timeslots = [
-    "8:45 - 10:20",
-    "10:35 - 12:10",
-    "12:25 - 14:00",
-    "14:45 - 16:20",
-    "16:35 - 18:10",
-    "18:25 - 20:00",
-    "20:15 - 21:50"
-]
+let addLessonForm = $("#addLesson");
 
 $(document).ready(function() {
     LessonForm();
     $(".form-check-label").disableSelection();
+    addLessonForm = $("#addLesson")
 })
-
-$.fn.extend({ 
-    disableSelection: function() { 
-        this.each(function() { 
-            if (typeof this.onselectstart != 'undefined') {
-                this.onselectstart = function() { return false; };
-            } else if (typeof this.style.MozUserSelect != 'undefined') {
-                this.style.MozUserSelect = 'none';
-            } else {
-                this.onmousedown = function() { return false; };
-            }
-        }); 
-    } 
-});
 
 function LessonForm()
 {
-    form = $("#addLesson");
-    selectInput = form.find(".select-input").clone();
+    selectInput = addLessonForm.find(".select-input").clone();
     selectInputSelect = selectInput.find("select");
     selectInputLabel = selectInput.find("label")
 
-    selectInputSelect.attr("id", "groupSelect");
-    selectInputLabel.attr("for", "groupSelect").html("<b>Группа</b>");
-    selectInput.clone().prependTo(form);
+    selectInputSelect.attr("id", "groupSelectAdd");
+    selectInputLabel.attr("for", "groupSelectAdd").html("<b>Группа</b>");
+    selectInput.clone().prependTo(addLessonForm);
 
-    selectInputSelect.attr("id", "roomSelect");
-    selectInputLabel.attr("for", "roomSelect").html("<b>Аудитория</b>");
-    selectInput.clone().prependTo(form);
+    selectInputSelect.attr("id", "roomSelectAdd");
+    selectInputLabel.attr("for", "roomSelectAdd").html("<b>Аудитория</b>");
+    selectInput.clone().prependTo(addLessonForm);
 
-    selectInputSelect.attr("id", "buildingSelect");
-    selectInputLabel.attr("for", "buildingSelect").html("<b>Корпус</b>");
-    selectInput.clone().prependTo(form);
+    selectInputSelect.attr("id", "buildingSelectAdd");
+    selectInputLabel.attr("for", "buildingSelectAdd").html("<b>Корпус</b>");
+    selectInput.clone().prependTo(addLessonForm);
 
-    selectInputSelect.attr("id", "subjectSelect");
-    selectInputLabel.attr("for", "subjectSelect").html("<b>Дисциплина</b>");
-    selectInput.clone().prependTo(form);
+    selectInputSelect.attr("id", "subjectSelectAdd");
+    selectInputLabel.attr("for", "subjectSelectAdd").html("<b>Дисциплина</b>");
+    selectInput.clone().prependTo(addLessonForm);
 
-    selectInputSelect.attr("id", "timeslotSelect").prop("disabled", false);
-    selectInputLabel.attr("for", "timeslotSelect").html("<b>Таймслот</b>");
+    selectInputSelect.attr("id", "timeslotSelectAdd").prop("disabled", false);
+    selectInputLabel.attr("for", "timeslotSelectAdd").html("<b>Таймслот</b>");
     timeslots.forEach(function(slot, i) {
         selectInputSelect.append($(`<option value="${i}">${slot}</option>`));
     })
-    selectInput.clone().insertAfter(form.find(".date-input"))
+    selectInput.clone().insertAfter(addLessonForm.find(".date-input"))
 
-    form.find('.datepicker').datepicker({
-        format: "dd/mm/yy",
+    addLessonForm.find('.datepicker').datepicker({
+        format: dateFormat,
         weekStart: 1,
         startDate: "0d",
         maxViewMode: 0,
@@ -71,14 +49,24 @@ function LessonForm()
 
     modal = $("#newModal").clone().attr("id", "addLessonModal").appendTo("#modals");
     modal.find("h1").text("Добавить пару");
-    modal.find(".modal-body").append(form);
+    modal.find(".modal-body").append(addLessonForm);
 }
 
 function ToggleEndDatePicker()
 {
-    if ($("#repeatLessonCheck").prop("checked")) {
-        $("#endDateInput").parent().removeClass("d-none");
+    if ($("#repeatLessonCheckAdd").prop("checked")) {
+        $("#endDateInputAdd").parent().removeClass("d-none");
     } else {
-        $("#endDateInput").parent().addClass("d-none");
+        $("#endDateInputAdd").parent().addClass("d-none");
     }
+}
+
+function FillInDateTime(date = "", timeslot = 0)
+{
+    if (date == "") {
+        addLessonForm.find("#dateInputAdd").val("");
+    } else {
+        addLessonForm.find("#dateInputAdd").datepicker("setDate", new Date(date));
+    }
+    addLessonForm.find("#timeslotSelectAdd").val(timeslot);
 }
