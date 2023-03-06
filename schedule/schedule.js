@@ -46,13 +46,19 @@ function GenerateTable(week) {
 }
 
 function DisplayLesson(lessonDTO, weekDay) {
+    subject = subjects.find(item => item.id === lessonDTO.subject)?.name;
+    building = buildings.find(item => item.id === lessonDTO.building)?.title;
+    room = rooms.find(item => item.id === lessonDTO.room)?.number;
+    group = groups.find(item => item.id === lessonDTO.group)?.number;
+    teacher = teachers.find(item => item.id === lessonDTO.teacher)?.name;
+
     newLessonCard = $("#lessonCard").clone();
 
     newLessonCard.attr("id", lessonDTO.id);
-    newLessonCard.find(".subject").text(subjectMap.get(lessonDTO.subject));
-    newLessonCard.find(".room").text(buildingMap.get(lessonDTO.building) + ',' + roomMap.get(lessonDTO.room));
-    newLessonCard.find(".group").text(groupMap.get(lessonDTO.group));
-    newLessonCard.find(".teacher").text(teacherMap.get(lessonDTO.teacher));
+    newLessonCard.find(".subject").text(subject);
+    newLessonCard.find(".room").text(building + ',' + room);
+    newLessonCard.find(".group").text(group);
+    newLessonCard.find(".teacher").text(teacher);
 
     newLessonCard.data("subject", lessonDTO.subject);
     newLessonCard.data("building", lessonDTO.building);

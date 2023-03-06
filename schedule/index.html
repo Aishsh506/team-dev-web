@@ -106,19 +106,14 @@
                 <ul class="dropdown-menu border-4">
                     <li><h6 class="dropdown-header">Добавить</h6></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#addLessonModal">
-                            Пару
-                        </button>
-                    </li>
-                    <li><button class="dropdown-item">Дисциплину</button></li>
-                    <li><button class="dropdown-item disabled">Корпус</button></li>
-                    <li><button class="dropdown-item disabled">Аудиторию</button></li>
-                    <li><button class="dropdown-item">Группу</button></li>
-                    <li><button class="dropdown-item">Преподавателя</button></li>
+                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addLessonModal">Пару</button></li>
+                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addSubjectModal">Дисциплину</button></li>
+                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addBuildingModal">Корпус</button></li>
+                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addRoomModal">Аудиторию</button></li>
+                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addGroupModal">Группу</button></li>
+                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTeacherModal">Преподавателя</button></li>
                 </ul>
             </div>
-            
             <div id="modals">
                 <div class="modal fade" id="newModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog">
@@ -156,6 +151,13 @@
                 <div class="mb-3 d-none">
                     <label for="endDateInputAdd" class="form-label"><b>Повторять пару до</b></label>
                     <input type="text" class="form-control datepicker" id="endDateInputAdd" autocomplete="off">
+                </div>
+            </form>
+
+            <form class="schedule-element-form">
+                <div class="mb-3">
+                    <label for="" class="form-label"></label>
+                    <input type="text" class="form-control" autocomplete="off" required>
                 </div>
             </form>
         </div>

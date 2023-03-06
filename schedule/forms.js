@@ -1,12 +1,13 @@
 let addLessonForm = $("#addLesson");
 
 $(document).ready(function() {
-    LessonForm();
+    LessonForms();
+    ScheduleElementForms();
     $(".form-check-label").disableSelection();
     addLessonForm = $("#addLesson")
 })
 
-function LessonForm()
+function LessonForms()
 {
     selectInput = addLessonForm.find(".select-input").clone();
     selectInputSelect = selectInput.find("select");
@@ -62,6 +63,58 @@ function LessonForm()
         disableTouchKeyboard: true,
         language: 'ru'
     });
+}
+
+function ScheduleElementForms()
+{
+    form = $('.schedule-element-form');
+    label = form.find("label");
+    input = form.find("input");
+
+    form.attr("id", "addSubject");
+    label.attr("for", "subjectName").html("<b>Название</b>");
+    input.attr("id", "subjectName");
+    emptyModal = $("#newModal").clone();
+    emptyModal.attr("id", "addSubjectModal").appendTo($("#modals"));
+    emptyModal.find("h1").text("Добавить дисциплину");
+    emptyModal.find(".modal-body").append(form.clone());
+
+    form.attr("id", "addBuilding");
+    label.attr("for", "buildingName").html("<b>Название</b>");
+    input.attr("id", "buildingName");
+    emptyModal = $("#newModal").clone();
+    emptyModal.attr("id", "addBuildingModal").appendTo($("#modals"));
+    emptyModal.find("h1").text("Добавить корпус");
+    emptyModal.find(".modal-body").append(form.clone());
+
+    form.attr("id", "addRoom");
+    label.attr("for", "roomName").html("<b>Номер</b>");
+    input.attr("id", "roomName");
+    emptyModal = $("#newModal").clone();
+    emptyModal.attr("id", "addRoomModal").appendTo($("#modals"));
+    emptyModal.find("h1").text("Добавить аудиторию");
+    emptyModal.find(".modal-body").append(form.clone());
+    $("#addRoom").prepend(`
+        <div class="mb-3">
+            <label for="roomBuildingSelect" class="form-label"><b>Корпус</b></label>
+            <select id="roomBuildingSelect" class="form-select" disabled></select>
+        </div>`);
+
+    form.attr("id", "addGroup");
+    label.attr("for", "groupNumber").html("<b>Номер</b>");
+    input.attr("id", "groupNumber");
+    emptyModal = $("#newModal").clone();
+    emptyModal.attr("id", "addGroupModal").appendTo($("#modals"));
+    emptyModal.find("h1").text("Добавить группу");
+    emptyModal.find(".modal-body").append(form.clone());
+
+    form.attr("id", "addTeacher");
+    label.attr("for", "teacherName").html("<b>Ф.И.О</b>");
+    input.attr("id", "teacherName");
+    emptyModal = $("#newModal").clone();
+    emptyModal.attr("id", "addTeacherModal").appendTo($("#modals"));
+    emptyModal.find("h1").text("Добавить преподавателя");
+    emptyModal.find(".modal-body").append(form);
 }
 
 function ToggleEndDatePicker(form)
