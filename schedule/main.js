@@ -1,12 +1,16 @@
 let activeLessonId;
 let weekStart;
 
-let subjects = []
-let buildings = []
-let rooms = []
+let subjects = [
+    { id: "1", name: "Тестирование ПО"},
+    { id: "2", name: "Машинное обучение"},
+    { id: "3", name: "БАЗЫ ДАННЫХ"} ];
+let buildings = [];
+let rooms = [];
 let groups = [];
 let teachers = [];
 
+const formDateOptions = { year: "2-digit", month: "2-digit", day:"2-digit"};
 const dateFormat = "dd.mm.yy";
 const timeslots = [
     "8:45 - 10:20",

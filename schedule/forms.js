@@ -3,6 +3,7 @@ let addLessonForm = $("#addLesson");
 $(document).ready(function() {
     LessonForms();
     ScheduleElementForms();
+    GenerateSelects();
     $(".form-check-label").disableSelection();
     addLessonForm = $("#addLesson")
 })
@@ -34,7 +35,7 @@ function LessonForms()
     timeslots.forEach(function(slot, i) {
         selectInputSelect.append($(`<option value="${i}">${slot}</option>`));
     })
-    selectInput.clone().insertAfter(addLessonForm.find(".date-input"))
+    selectInput.clone().insertAfter(addLessonForm.find(".date-input"));
 
     modal = $("#newModal").clone().attr("id", "addLessonModal").appendTo("#modals");
     modal.find("h1").text("Добавить пару");
@@ -51,6 +52,10 @@ function LessonForms()
         inputLabel.attr("for", inputLabel.attr("for").slice(0, -3) + "Edit");
         input.attr("id", input.attr("id").slice(0, -3) + "Edit");
     })
+    modal.find("#editLesson").append(`
+        <div class="alert alert-warning d-none" role="alert">
+            Недоступно редактирование пар с прошедшей стартовой датой
+        </div>`);
 
     $('.datepicker').datepicker({
         format: dateFormat,
@@ -97,7 +102,7 @@ function ScheduleElementForms()
     $("#addRoom").prepend(`
         <div class="mb-3">
             <label for="roomBuildingSelect" class="form-label"><b>Корпус</b></label>
-            <select id="roomBuildingSelect" class="form-select" disabled></select>
+            <select id="roomBuildingSelect" class="form-select"></select>
         </div>`);
 
     form.attr("id", "addGroup");
@@ -117,40 +122,15 @@ function ScheduleElementForms()
     emptyModal.find(".modal-body").append(form);
 }
 
-function ToggleEndDatePicker(form)
+function GenerateSelects()
 {
-    if ($("#repeatLessonCheck" + form).prop("checked")) {
-        $("#endDateInput" + form).parent().removeClass("d-none");
-    } else {
-        $("#endDateInput" + form).parent().addClass("d-none");
-    }
+    FillInSelect($("#subjectSelectAdd, #subjectSelectEdit"), subjects);
+    FillInSelect($("#buildingSelectAdd, #buildingSelectEdit, #roomBuildingSelect"), buildings, "title"); 
+    FillInSelect($("#groupSelectAdd, #groupSelectEdit"), groups);
+    FillInSelect($("#teacherSelectAdd, #teacherSelectEdit"), groups);
 }
 
-function FillInDateTime(date = "", timeslot = 0)
+function FillInSelect(select, array, displayedText = "name")
 {
-    if (date == "") {
-        $("#dateInputAdd").val("");
-    } else {
-        $("#dateInputAdd").datepicker("setDate", new Date(date));
-    }
-    $("#timeslotSelectAdd").val(timeslot);
-}
-
-function FillInLessonDetails(lessonCard)
-{
-    lessonCard = $(lessonCard);
-    endDate = lessonCard.data("end-date");
-    endDate = endDate == null ? null : new Date(endDate);
-
-    activeLessonId = lessonCard.attr("id");
-    $("#subjectSelectEdit").val(lessonCard.data("subject"));
-    $("#buildingSelectEdit").val(lessonCard.data("building"));
-    $("#roomSelectEdit").val(lessonCard.data("room"));
-    $("#groupSelectEdit").val(lessonCard.data("group"));
-    $("#teacherSelectEdit").val(lessonCard.data("teacher"));
-    $("#dateInputEdit").datepicker("setDate", weekStart.addDays(lessonCard.data("week-day") - 1));
-    $("#timeslotSelectEdit").val(lessonCard.data("timeslot"));
-    $("#repeatLessonCheckEdit").prop("checked", endDate != null);
-    ToggleEndDatePicker("Edit");
-    $("#endDateInputEdit").datepicker("setDate", endDate);
+    array.forEach(item => select.append(`<option value="${item.id}">${item[displayedText]}</option>`));
 }
