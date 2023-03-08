@@ -3,7 +3,7 @@ $(document).ready(function() {
         get: (searchParams, prop) => searchParams.get(prop),
         });
     GenerateTable(parseInt(searchParams.week));
-    DisplayLesson( {id: "dfsfsfl", subject: "1", timeslot: 2, endDate: null}, 2 );
+    DisplayLesson( {id: "dfsfsfl", subject: "3", timeslot: 2, startDate: new Date("03/07/23"), endDate: new Date("03/07/23") }, 2 );
 })
 
 function GenerateTable(week) {
@@ -29,17 +29,19 @@ function GenerateTable(week) {
     $("tbody tr").each(function(timeslot) {
         for(let weekDay = 1; weekDay <= 6; weekDay++)
         {
-            $(`<td class="empty-cell align-middle text-center" id="lesson${timeslot}-${weekDay}"></td>`)
+            cell = $(`<td class="empty-cell align-middle text-center" id="lesson${timeslot}-${weekDay}"></td>`)
                 .appendTo(this)
                 .hover(
                 function() {
                     if ($(this).is(".empty-cell")) $(this).find(".plus").removeClass("d-none");
                 }, function() {
                     if ($(this).is(".empty-cell")) $(this).find(".plus").addClass("d-none");
-                })
-                .append($("#plus").clone().removeAttr("id").attr({
+                });
+            if (( week == 0 && weekDay > (new Date()).getDay() ) || week > 0) {
+                cell.append($("#plus").clone().removeAttr("id").attr({
                     "data-date": weekStart.addDays(weekDay - 1),
                     "data-timeslot": timeslot }));
+            }
         }
     })
     $("td .plus").click(function() { FillInDateTime($(this).attr("data-date"), $(this).attr("data-timeslot")) })
@@ -56,7 +58,7 @@ function DisplayLesson(lessonDTO, weekDay) {
 
     newLessonCard.attr("id", lessonDTO.id);
     newLessonCard.find(".subject").text(subject);
-    newLessonCard.find(".room").text(building + ',' + room);
+    newLessonCard.find(".room").text(building + ', ' + room);
     newLessonCard.find(".group").text(group);
     newLessonCard.find(".teacher").text(teacher);
 
@@ -67,6 +69,7 @@ function DisplayLesson(lessonDTO, weekDay) {
     newLessonCard.data("teacher", lessonDTO.teacher);
     newLessonCard.data("week-day", weekDay);
     newLessonCard.data("timeslot", lessonDTO.timeslot);
+    newLessonCard.data("start-date", lessonDTO.startDate);
     newLessonCard.data("end-date", lessonDTO.endDate);
     
     $(`#lesson${lessonDTO.timeslot}-${weekDay}`).append(newLessonCard).removeClass("empty-cell");
