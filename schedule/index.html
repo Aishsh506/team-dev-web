@@ -41,7 +41,11 @@
             </div>
         </nav>
         <div class="container">
-            <h4><span id="weekStart">...</span> - <span id="weekEnd">...</span></h4>
+            <div class="d-flex align-items-center">
+                <button type="button" class="btn btn-outline-dark border-2 mb-2 py-sm-0 px-sm-3" onclick="WeekAdd(-1)"><b><</b></button>
+                <h4 class="mx-3"><span id="weekStart">...</span> - <span id="weekEnd">...</span></h4>
+                <button type="button" class="btn btn-outline-dark border-2 mb-2 py-sm-0 px-sm-3" onclick="WeekAdd(1)"><b>></b></button>
+            </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="table">
                     <caption>Время пар указано по томскому времени (UTC+7:00)</caption>
@@ -49,17 +53,17 @@
                         <tr>
                             <td class="align-top">
                                 <div
-                                class="card d-none card-success border-success text-success"
-                                style="cursor: pointer;"
+                                class="card d-none card-success border-success text-success mx-auto"
+                                style="cursor: pointer; max-width: 162px;"
                                 id="lessonCard"
                                 data-bs-toggle="modal"
                                 data-bs-target="#editLessonModal"
                                 onClick="FillInLessonDetails(this)">
+                                    <h5 class="subject card-header p-0 text-wrap">Название пары</h5>
                                     <div class="card-body p-2 fs-6">
-                                        <h5 class="subject card-title">Название пары</h5>
-                                        <div class="room">Корпус, аудитория</div>
-                                        <div class="group">Группа</div>
-                                        <div class="teacher">Преподаватель</div>
+                                        <div class="room text-wrap">Корпус, аудитория</div>
+                                        <div class="group text-wrap">Группа</div>
+                                        <div class="teacher text-wrap">Преподаватель</div>
                                     </div>
                                 </div>
                                 <button
@@ -74,12 +78,12 @@
                                         <div class="fs-1" style="margin-top: -9px">+</div>
                                 </button>
                             </td>
-                            <th scope="col" style="min-width: 180px">Пн</th>
-                            <th scope="col" style="min-width: 180px">Вт</th>
-                            <th scope="col" style="min-width: 180px">Ср</th>
-                            <th scope="col" style="min-width: 180px">Чт</th>
-                            <th scope="col" style="min-width: 180px">Пт</th>
-                            <th scope="col" style="min-width: 180px">Сб</th>
+                            <th scope="col" style="min-width: 180px;">Пн</th>
+                            <th scope="col" style="min-width: 180px;">Вт</th>
+                            <th scope="col" style="min-width: 180px;">Ср</th>
+                            <th scope="col" style="min-width: 180px;">Чт</th>
+                            <th scope="col" style="min-width: 180px;">Пт</th>
+                            <th scope="col" style="min-width: 180px;">Сб</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -166,4 +170,5 @@
     <script src="schedule.js"></script>
     <script src="forms.js"></script>
     <script src="eventHandlers.js"></script>
+    <script src="/requests.js"></script>
 </html>

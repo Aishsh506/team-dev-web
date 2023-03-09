@@ -49,3 +49,14 @@ function FillInDateTime(date = "", timeslot = 0)
     }
     $("#timeslotSelectAdd").val(timeslot);
 }
+
+function WeekAdd(val)
+{
+    url = new URL(window.location.href);
+    search_params = url.searchParams;
+    week = parseInt(search_params.get("week"));
+    week = Number.isNaN(week) ? 0 : week;
+    search_params.set("week", week + val);
+    url.search = search_params.toString();
+    window.location.href = url;
+}
