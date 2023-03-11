@@ -10,6 +10,10 @@
 			integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
 			crossorigin="anonymous"
 		/>
+        <script
+        src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+        crossorigin="anonymous"></script>
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -157,7 +161,7 @@
 						</li>
 					</ul>
 
-					<button class="btn btn-outline-secondary me-2" type="submit">
+					<button class="btn btn-outline-secondary me-2" onclick="PerformLogout()" type="submit">
 						Выйти
 					</button>
 				</div>
@@ -256,4 +260,7 @@
 		integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
 		crossorigin="anonymous"
 	></script>
+	<script src="performLogout.js"></script>
+	<script src="requests.js"></script>
+	<script src="checkAuth.js"></script>
 </html>

@@ -1,5 +1,49 @@
 const defaultPath = "https://127.0.0.1:7056/api";
 
+async function Login(email, pswd) {
+	const response = await fetch(defaultPath + "/auth/login", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({
+			email: email,
+			password: pswd
+		})
+	});
+	if (response.ok) return await response.json();
+	const responseBody = await response.json();
+	console.log(responseBody);
+	throw new Error(response.status);
+}
+
+async function Logout(accessToken) {
+	const response = await fetch(defaultPath + "/auth/logout", {
+		method: "POST",
+		headers: {
+			"Authorization": "Bearer " + accessToken
+		}
+	});
+	if (!response.ok) {
+		const responseBody = await response.json();
+		console.log(responseBody);
+		throw new Error(responseBody.toString());
+	}
+}
+
+async function Refresh(refreshToken) {
+	const response = await fetch(defaultPath + "/auth/refresh", {
+		method: "GET",
+		headers: {
+			"Authorization": "Bearer " + refreshToken
+		}
+	});
+	if (response.ok) return await response.json();
+	const responseBody = await response.json();
+	console.log(responseBody);
+	throw new Error(response.status);
+}
+
 async function CreateGroup(groupName) {
 	console.log("CreatingGroup:" + groupName);
 
@@ -103,7 +147,7 @@ async function GetBuildings() {
 	try {
 		const response = await fetch(defaultPath + "/buildings", {
 			method: "GET",
-			headers: {
+            headers: {
 				"Content-Type": "application/json",
 			},
 		});

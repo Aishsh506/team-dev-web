@@ -1,18 +1,31 @@
 $(document).ready(function() {
-    const searchParams = new Proxy(new URLSearchParams(window.location.search), {
-        get: (searchParams, prop) => searchParams.get(prop),
-        });
-    GenerateTable(parseInt(searchParams.week));
+    const search_params = new URL(window.location.href).searchParams;
+    searchMethod = search_params.get("method");
+    searchId1 = search_params.get("id1");
+    searchId2 = search_params.get("id2")
+    GenerateTable(parseInt(search_params.get("week")));
     DisplayLesson( {id: "dfsfsfl", subject: "3", timeslot: 2, startDate: new Date("03/07/23"), endDate: new Date("03/07/23") }, 2 );
 })
 
 function GenerateTable(week) {
-    if (Number.isNaN(week)) {
-        week = 0;
-    }
+    week = Number.isNaN(week) ? 0 : week;
     weekDate = new Date();
     weekDate = weekDate.addDays(7 * week);
     weekStart = (weekDate.addDays(1 - weekDate.getDay()));
+
+    //заполнение заголовка таблицы
+    switch (searchMethod) {
+        case "byGroup":
+            $("#tableHeader").append("Расписание группы " + groups.find(item => item.id === searchId1)?.number);
+            break;
+        case "byTeacher":
+            $("#tableHeader").append("Расписание преподавателя " + teachers.find(item => item.id === searchId1)?.name);
+            break;
+        case "byRoom":
+            $("#tableHeader").append(`
+                Расписание аудитории ${rooms.find(item => item.id === searchId1)?.number} (${buildings.find(item => item.id === searchId2)?.title})`);
+            break;
+    }
 
     //заполнение дат начала и конца недели
     $("#weekStart").text(new Intl.DateTimeFormat('ru', { dateStyle:"long"}).format(weekStart));

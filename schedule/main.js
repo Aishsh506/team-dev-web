@@ -1,12 +1,15 @@
 let activeLessonId;
 let weekStart;
+let searchMethod;
+let searchId1;
+let searchId2;
 
 let subjects = [
     { id: "1", name: "Тестирование ПО"},
     { id: "2", name: "Машинное обучение"},
     { id: "3", name: "БАЗЫ ДАННЫХ"} ];
-let buildings = [];
-let rooms = [];
+let buildings = [ { id: "b1", title: "Главный корпус" } ];
+let rooms = [ { id: "r1", number: "218" } ];
 let groups = [];
 let teachers = [];
 
