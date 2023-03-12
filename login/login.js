@@ -7,6 +7,7 @@ $(document).ready(function() {
 
 async function PerformLogin()
 {
+    if (!ValidateForm()) return;
     let tokens;
     $("#loginBtn").attr("disabled", true);
     try {
@@ -20,4 +21,12 @@ async function PerformLogin()
     localStorage.setItem("accessToken", tokens.accessToken);
     localStorage.setItem("refreshToken", tokens.refreshToken);
     window.location.href = "../";
+}
+
+function ValidateForm()
+{
+    if (!Validate($("#emailInput"), v => v != "", "Поле не должно быть пустым")) return false;
+    if (!Validate($("#emailInput"), v => /^.+\@.+\..+$/.test(v), "Некорректный e-mail")) return false;
+    if (!Validate($("#passwordInput"), v => v != "", "Поле не должно быть пустым")) return false;
+    return true;
 }
