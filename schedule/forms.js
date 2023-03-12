@@ -195,7 +195,11 @@ async function EditLesson() {
     $(this)?.attr("disabled", true);
     try {
         dateInput = $("#dateInputEdit").val().split("-").reverse().join("-");
-        endDateInput = $("#endDateInputEdit").val().split("-").reverse().join("-");
+        if ($("#repeatLessonCheckAdd").prop("checked")) {
+            endDateInput = $("#endDateInputEdit").val().split("-").reverse().join("-");
+        } else {
+            endDateInput = dateInput;
+        }
         await PutLesson(activeLessonId, {
             startDate: dateInput,
             endDate: endDateInput,
