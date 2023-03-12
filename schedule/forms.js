@@ -1,13 +1,5 @@
 let addLessonForm = $("#addLesson");
 
-$(document).ready(function() {
-    LessonForms();
-    ScheduleElementForms();
-    GenerateSelects();
-    $(".form-check-label").disableSelection();
-    addLessonForm = $("#addLesson")
-})
-
 function LessonForms()
 {
     selectInput = addLessonForm.find(".select-input").clone();
@@ -40,6 +32,14 @@ function LessonForms()
     modal = $("#newModal").clone().attr("id", "addLessonModal").appendTo("#modals");
     modal.find("h1").text("Добавить пару");
     modal.find(".modal-body").append(addLessonForm);
+    modal.find(".btn-primary").click(function() {
+        if (Validate($("#endDateInputAdd"), val => {
+            startDate = new Date($("#dateInputAdd").val().split("-").reverse().join("-"));
+            endDate = new Date(val.split("-").reverse().join("-"));
+            return startDate <= endDate;
+        }, "Конечная дата пары должна быть больше стартовой"))
+        CreateScheduleElement("lesson");
+    });
 
     modal = modal.clone().appendTo("#modals").attr("id", "editLessonModal");
     modal.find("h1").text("Редактировать пару");
@@ -56,6 +56,17 @@ function LessonForms()
         <div class="alert alert-warning d-none" role="alert">
             Недоступно редактирование пар с прошедшей стартовой датой
         </div>`);
+    modal.find(".btn-primary").click(function() {
+        if (Validate($("#endDateInputEdit"), val => {
+            startDate = new Date($("#dateInputEdit").val().split("-").reverse().join("-"));
+            endDate = new Date(val.split("-").reverse().join("-"));
+            return startDate <= endDate;
+        }, "Конечная дата пары должна быть больше стартовой"))
+        EditLesson();
+    });
+    $(`<button type="button" class="btn btn-danger">Удалить пару</button>`)
+        .insertBefore(modal.find(".btn-primary"))
+        .click(LessonDelete);
 
     $('.datepicker').datepicker({
         format: dateFormat,
@@ -83,6 +94,10 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addSubjectModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить дисциплину");
     emptyModal.find(".modal-body").append(form.clone());
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#subjectName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("subject");
+    });
 
     form.attr("id", "addBuilding");
     label.attr("for", "buildingName").html("<b>Название</b>");
@@ -91,6 +106,10 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addBuildingModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить корпус");
     emptyModal.find(".modal-body").append(form.clone());
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#buildingName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("building");
+    });
 
     form.attr("id", "addRoom");
     label.attr("for", "roomName").html("<b>Номер</b>");
@@ -104,14 +123,22 @@ function ScheduleElementForms()
             <label for="roomBuildingSelect" class="form-label"><b>Корпус</b></label>
             <select id="roomBuildingSelect" class="form-select"></select>
         </div>`);
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#roomName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("room");
+    });
 
     form.attr("id", "addGroup");
-    label.attr("for", "groupNumber").html("<b>Номер</b>");
-    input.attr("id", "groupNumber");
+    label.attr("for", "groupName").html("<b>Номер</b>");
+    input.attr("id", "groupName");
     emptyModal = $("#newModal").clone();
     emptyModal.attr("id", "addGroupModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить группу");
     emptyModal.find(".modal-body").append(form.clone());
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#groupName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("group");
+    });
 
     form.attr("id", "addTeacher");
     label.attr("for", "teacherName").html("<b>Ф.И.О</b>");
@@ -120,17 +147,116 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addTeacherModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить преподавателя");
     emptyModal.find(".modal-body").append(form);
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#teacherName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("teacher");
+    });
 }
 
-function GenerateSelects()
+async function GenerateSelects()
 {
     FillInSelect($("#subjectSelectAdd, #subjectSelectEdit"), subjects);
-    FillInSelect($("#buildingSelectAdd, #buildingSelectEdit, #roomBuildingSelect"), buildings, "title"); 
+    FillInSelect($("#buildingSelectAdd, #buildingSelectEdit, #roomBuildingSelect"), buildings, "title");
     FillInSelect($("#groupSelectAdd, #groupSelectEdit"), groups);
-    FillInSelect($("#teacherSelectAdd, #teacherSelectEdit"), groups);
+    FillInSelect($("#teacherSelectAdd, #teacherSelectEdit"), teachers);
+    FillInSelect($("#roomSelectAdd, #roomSelectEdit"), await GetRooms(buildings[0]?.id));
+
+    $("#buildingSelectAdd").change(async function() {FillInSelect($("#roomSelectAdd"), await GetRooms($("#buildingSelectAdd").val()))});
+    $("#buildingSelectEdit").change(async function() {FillInSelect($("#roomSelectEdit"), await GetRooms($("#buildingSelectEdit").val()))});
 }
 
 function FillInSelect(select, array, displayedText = "name")
 {
+    select.empty();
     array.forEach(item => select.append(`<option value="${item.id}">${item[displayedText]}</option>`));
+}
+
+async function CreateScheduleElement(type) {
+    $(this)?.attr("disabled", true);
+    let result;
+    switch (type) {
+        case "lesson":
+            dateInput = $("#dateInputAdd").val().split("-").reverse().join("-");
+            if ($("#repeatLessonCheckAdd").prop("checked")) {
+                endDateInput = $("#endDateInputAdd").val().split("-").reverse().join("-");
+            } else endDateInput = dateInput;
+            try {
+                result = await PostLesson({
+                    startDate: dateInput,
+                    endDate: endDateInput,
+                    timeslot: $("#timeslotSelectAdd").val(),
+                    teacherId: $("#teacherSelectAdd").val(),
+                    roomId: $("#roomSelectAdd").val(),
+                    groupId: $("#groupSelectAdd").val(),
+                    subjectId: $("#subjectSelectAdd").val(),
+                    buildingId: $("#buildingSelectAdd").val()
+                }, localStorage.getItem("accessToken"));
+            } catch(e) {
+                console.log(e);
+            }
+            break;
+        case "subject":
+            result = await CreateSubject($("#subjectName").val(), localStorage.getItem("accessToken"));
+            break;
+        case "building":
+            result = await CreateBuilding($("#buildingName").val(), localStorage.getItem("accessToken"));
+            break;
+        case "room":
+            result = await CreateRoom($("#roomBuildingSelect").val(), $("#roomName").val(), localStorage.getItem("accessToken"));
+            break;
+        case "group":
+            result = await CreateGroup($("#groupName").val(), localStorage.getItem("accessToken"));
+            break;
+        case "teacher":
+            result = await CreateTeacher($("#teacherName").val(), localStorage.getItem("accessToken"));
+        default:
+            break;
+    }
+    if (result == 200) {
+        alert("Элемент расписания создан");
+        window.location.reload();
+    }
+    else alert("Ошибка при создании элемента расписания");
+    $(this)?.attr("disabled", false);
+}
+
+async function EditLesson() {
+    $(this)?.attr("disabled", true);
+    try {
+        dateInput = $("#dateInputEdit").val().split("-").reverse().join("-");
+        if ($("#repeatLessonCheckAdd").prop("checked")) {
+            endDateInput = $("#endDateInputEdit").val().split("-").reverse().join("-");
+        } else {
+            endDateInput = dateInput;
+        }
+        await PutLesson(activeLessonId, {
+            startDate: dateInput,
+            endDate: endDateInput,
+            timeslot: $("#timeslotSelectEdit").val(),
+            teacherId: $("#teacherSelectEdit").val(),
+            roomId: $("#roomSelectEdit").val(),
+            groupId: $("#groupSelectEdit").val(),
+            subjectId: $("#subjectSelectEdit").val(),
+            buildingId: $("#buildingSelectEdit").val()
+        }, localStorage.getItem("accessToken"));
+    } catch(e) {
+        alert("Ошибка при редактировании расписания");
+        console.log(e);
+    }
+    $(this)?.attr("disabled", false);
+    alert("Изменения сохранены");
+    window.location.reload();
+}
+
+async function LessonDelete() {
+    $(this)?.attr("disabled", true);
+    try {
+        await DeleteLesson(activeLessonId, localStorage.getItem("accessToken"));
+    } catch(e) {
+        alert("Ошибка при попытке удаления пары");
+        console.log(e);
+    }
+    $(this)?.attr("disabled", false);
+    alert("Изменения сохранены");
+    window.location.reload();
 }

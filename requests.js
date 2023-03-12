@@ -1,44 +1,90 @@
-const defaultPath = "http://127.0.0.1:5137/api";
+const defaultPath = "http://46.161.150.167:50011/api";
 
-async function CreateGroup(groupName) {
+async function Login(email, pswd) {
+	const response = await fetch(defaultPath + "/auth/login", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({
+			email: email,
+			password: pswd
+		})
+	});
+	if (response.ok) return await response.json();
+	const responseBody = await response.json();
+	console.log(responseBody);
+	throw new Error(response.status);
+}
+
+async function Logout(accessToken) {
+	const response = await fetch(defaultPath + "/auth/logout", {
+		method: "POST",
+		headers: {
+			"Authorization": "Bearer " + accessToken
+		}
+	});
+	if (!response.ok) {
+		const responseBody = await response.json();
+		console.log(responseBody);
+		throw new Error(responseBody.toString());
+	}
+}
+
+async function Refresh(refreshToken) {
+	const response = await fetch(defaultPath + "/auth/refresh", {
+		method: "GET",
+		headers: {
+			"Authorization": "Bearer " + refreshToken
+		}
+	});
+	if (response.ok) return await response.json();
+	const responseBody = await response.json();
+	console.log(responseBody);
+	throw new Error(response.status);
+}
+
+async function CreateGroup(groupName, accessToken) {
 	console.log("CreatingGroup:" + groupName);
 
 	try {
 		const response = await fetch(defaultPath + "/groups", {
 			method: "POST",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				name: groupName,
 			}),
 		});
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
 }
 
-async function CreateBuilding(buildingName) {
+async function CreateBuilding(buildingName, accessToken) {
 	console.log("CreatingBuilding:" + buildingName);
 
 	try {
 		const response = await fetch(defaultPath + "/buildings", {
 			method: "POST",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				name: buildingName,
 			}),
 		});
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
 }
 
-async function CreateRoom(buildingId, roomName) {
+async function CreateRoom(buildingId, roomName, accessToken) {
 	console.log("CreatingRoom:" + roomName);
 
 	try {
@@ -47,7 +93,7 @@ async function CreateRoom(buildingId, roomName) {
 			{
 				method: "POST",
 				headers: {
-					//Authorization:,
+					"Authorization": "Bearer " + accessToken,
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
@@ -55,44 +101,47 @@ async function CreateRoom(buildingId, roomName) {
 				}),
 			}
 		);
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
 }
 
-async function CreateSubject(subjectName) {
+async function CreateSubject(subjectName, accessToken) {
 	console.log("CreatingSubject:" + subjectName);
 
 	try {
 		const response = await fetch(defaultPath + "/subjects", {
 			method: "POST",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				name: subjectName,
 			}),
 		});
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
 }
 
-async function CreateTeacher(teacherName) {
+async function CreateTeacher(teacherName, accessToken) {
 	console.log("CreatingTeacher:" + teacherName);
 
 	try {
 		const response = await fetch(defaultPath + "/teachers", {
 			method: "POST",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				name: teacherName,
 			}),
 		});
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
@@ -103,7 +152,7 @@ async function GetBuildings() {
 	try {
 		const response = await fetch(defaultPath + "/buildings", {
 			method: "GET",
-			headers: {
+            headers: {
 				"Content-Type": "application/json",
 			},
 		});

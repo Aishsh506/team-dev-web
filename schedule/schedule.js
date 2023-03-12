@@ -1,18 +1,22 @@
-$(document).ready(function() {
-    const searchParams = new Proxy(new URLSearchParams(window.location.search), {
-        get: (searchParams, prop) => searchParams.get(prop),
-        });
-    GenerateTable(parseInt(searchParams.week));
-    DisplayLesson( {id: "dfsfsfl", subject: "3", timeslot: 2, startDate: new Date("03/07/23"), endDate: new Date("03/07/23") }, 2 );
-})
-
-function GenerateTable(week) {
-    if (Number.isNaN(week)) {
-        week = 0;
-    }
+async function GenerateTable(week) {
+    week = Number.isNaN(week) ? 0 : week;
     weekDate = new Date();
     weekDate = weekDate.addDays(7 * week);
     weekStart = (weekDate.addDays(1 - weekDate.getDay()));
+
+    //заполнение заголовка таблицы
+    switch (searchMethod) {
+        case "byGroup":
+            $("#tableHeader").append("Расписание группы " + groups.find(item => item.id === searchId1)?.name);
+            break;
+        case "byTeacher":
+            $("#tableHeader").append("Расписание преподавателя " + teachers.find(item => item.id === searchId1)?.name);
+            break;
+        case "byRoom":
+            $("#tableHeader").append(`
+                Расписание аудитории ${(await GetRooms(searchId2)).find(item => item.id === searchId1)?.name} (${buildings.find(item => item.id === searchId2)?.title})`);
+            break;
+    }
 
     //заполнение дат начала и конца недели
     $("#weekStart").text(new Intl.DateTimeFormat('ru', { dateStyle:"long"}).format(weekStart));
@@ -47,31 +51,51 @@ function GenerateTable(week) {
     $("td .plus").click(function() { FillInDateTime($(this).attr("data-date"), $(this).attr("data-timeslot")) })
 }
 
-function DisplayLesson(lessonDTO, weekDay) {
-    subject = subjects.find(item => item.id === lessonDTO.subject)?.name;
-    building = buildings.find(item => item.id === lessonDTO.building)?.title;
-    room = rooms.find(item => item.id === lessonDTO.room)?.number;
-    group = groups.find(item => item.id === lessonDTO.group)?.number;
-    teacher = teachers.find(item => item.id === lessonDTO.teacher)?.name;
+async function FillInTable()
+{
+    let schedule;
+    try {
+        schedule = await GetSchedule(weekStart.toISOString(), searchMethod, searchId1);
+    } catch(e) {
+        alert("Ошибка при получении расписания с сервера");
+        console.log(e.message);
+        return;
+    }
 
+    schedule.days.forEach(day => {
+        day.lessons.forEach(lesson => {
+            DisplayLesson(lesson, day.dayOfTheWeek);
+        })
+    });
+}
+
+function DisplayLesson(lesson, weekDay) {
     newLessonCard = $("#lessonCard").clone();
 
-    newLessonCard.attr("id", lessonDTO.id);
-    newLessonCard.find(".subject").text(subject);
-    newLessonCard.find(".room").text(building + ', ' + room);
-    newLessonCard.find(".group").text(group);
-    newLessonCard.find(".teacher").text(teacher);
+    newLessonCard.attr("id", lesson.id);
+    newLessonCard.find(".subject").text(lesson.subject.name);
+    newLessonCard.find(".room").text(lesson.building.title + ', ' + lesson.room.name);
+    newLessonCard.find(".group").text(lesson.group.name);
+    newLessonCard.find(".teacher").text(lesson.teacher.name);
 
-    newLessonCard.data("subject", lessonDTO.subject);
-    newLessonCard.data("building", lessonDTO.building);
-    newLessonCard.data("room", lessonDTO.room);
-    newLessonCard.data("group", lessonDTO.group);
-    newLessonCard.data("teacher", lessonDTO.teacher);
+    newLessonCard.data("subject", lesson.subject.id);
+    newLessonCard.data("building", lesson.building.id);
+    newLessonCard.data("room", lesson.room.id);
+    newLessonCard.data("group", lesson.group.id);
+    newLessonCard.data("teacher", lesson.teacher.id);
     newLessonCard.data("week-day", weekDay);
-    newLessonCard.data("timeslot", lessonDTO.timeslot);
-    newLessonCard.data("start-date", lessonDTO.startDate);
-    newLessonCard.data("end-date", lessonDTO.endDate);
+    newLessonCard.data("timeslot", lesson.timeslot);
+    newLessonCard.data("start-date", lesson.startDate);
+    newLessonCard.data("end-date", lesson.endDate);
     
-    $(`#lesson${lessonDTO.timeslot}-${weekDay}`).append(newLessonCard).removeClass("empty-cell");
+    $(`#lesson${lesson.timeslot}-${weekDay}`).append(newLessonCard).removeClass("empty-cell");
     newLessonCard.removeClass("d-none");
+}
+
+async function GetLists()
+{
+    subjects = await GetSubjects();
+    buildings = await GetBuildings();
+    groups = await GetGroups();
+    teachers = await GetTeachers();
 }
