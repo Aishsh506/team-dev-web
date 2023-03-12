@@ -1,4 +1,4 @@
-const defaultPath = "https://127.0.0.1:7056/api";
+const defaultPath = "http://127.0.0.1:5137/api";
 
 async function CreateGroup(groupName) {
 	console.log("CreatingGroup:" + groupName);
@@ -38,7 +38,7 @@ async function CreateBuilding(buildingName) {
 	}
 }
 
-async function CreateBuilding(buildingId, roomName) {
+async function CreateRoom(buildingId, roomName) {
 	console.log("CreatingRoom:" + roomName);
 
 	try {
@@ -153,7 +153,7 @@ async function GetSubjects() {
 	console.log("GettingListOfSubjects");
 
 	try {
-		const response = await fetch(defaultPath + "/subjects/", {
+		const response = await fetch(defaultPath + "/subjects", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
