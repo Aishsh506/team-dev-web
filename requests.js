@@ -4,12 +4,12 @@ async function Login(email, pswd) {
 	const response = await fetch(defaultPath + "/auth/login", {
 		method: "POST",
 		headers: {
-			"Content-Type": "application/json"
+			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({
 			email: email,
-			password: pswd
-		})
+			password: pswd,
+		}),
 	});
 	if (response.ok) return await response.json();
 	const responseBody = await response.json();
@@ -21,8 +21,8 @@ async function Logout(accessToken) {
 	const response = await fetch(defaultPath + "/auth/logout", {
 		method: "POST",
 		headers: {
-			"Authorization": "Bearer " + accessToken
-		}
+			Authorization: "Bearer " + accessToken,
+		},
 	});
 	if (!response.ok) {
 		const responseBody = await response.json();
@@ -35,8 +35,8 @@ async function Refresh(refreshToken) {
 	const response = await fetch(defaultPath + "/auth/refresh", {
 		method: "GET",
 		headers: {
-			"Authorization": "Bearer " + refreshToken
-		}
+			Authorization: "Bearer " + refreshToken,
+		},
 	});
 	if (response.ok) return await response.json();
 	const responseBody = await response.json();
@@ -51,7 +51,7 @@ async function CreateGroup(groupName, accessToken) {
 		const response = await fetch(defaultPath + "/groups", {
 			method: "POST",
 			headers: {
-				"Authorization": "Bearer " + accessToken,
+				Authorization: "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
@@ -71,7 +71,7 @@ async function CreateBuilding(buildingName, accessToken) {
 		const response = await fetch(defaultPath + "/buildings", {
 			method: "POST",
 			headers: {
-				"Authorization": "Bearer " + accessToken,
+				Authorization: "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
@@ -93,7 +93,7 @@ async function CreateRoom(buildingId, roomName, accessToken) {
 			{
 				method: "POST",
 				headers: {
-					"Authorization": "Bearer " + accessToken,
+					Authorization: "Bearer " + accessToken,
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
@@ -114,7 +114,7 @@ async function CreateSubject(subjectName, accessToken) {
 		const response = await fetch(defaultPath + "/subjects", {
 			method: "POST",
 			headers: {
-				"Authorization": "Bearer " + accessToken,
+				Authorization: "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
@@ -134,7 +134,7 @@ async function CreateTeacher(teacherName, accessToken) {
 		const response = await fetch(defaultPath + "/teachers", {
 			method: "POST",
 			headers: {
-				"Authorization": "Bearer " + accessToken,
+				Authorization: "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
@@ -152,7 +152,7 @@ async function GetBuildings() {
 	try {
 		const response = await fetch(defaultPath + "/buildings", {
 			method: "GET",
-            headers: {
+			headers: {
 				"Content-Type": "application/json",
 			},
 		});

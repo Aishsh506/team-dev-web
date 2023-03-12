@@ -60,8 +60,8 @@ $(function () {
 	$("#create-room-Btn").click(async function () {
 		BuildingId = BuildingData.get(createroombuildingInput.val());
 		createroomInputValue = createroomInput.val();
-		await CreateRoom(BuildingId, createroomInputValue);
-		await ReloadRoomData();
+		await CreateRoom(BuildingId, createroomInputValue,localStorage.accessToken);
+		await ReloadRoomData(BuildingId);
 	});
 
 	$("#set-role-Btn").click(async function () {
@@ -75,25 +75,24 @@ $(function () {
 	});
 
 	$("#create-group-Btn").click(async function () {
-		await CreateGroup(creategroupInput.val());
+		await CreateGroup(creategroupInput.val(),localStorage.accessToken);
 		await ReloadGroupData();
 		//creategroupInput.val('')
 	});
 
 	$("#create-subject-Btn").click(async function () {
-		await CreateSubject(createsubjectInput.val());
+		await CreateSubject(createsubjectInput.val(),localStorage.accessToken);
 		await ReloadSubjectData();
-		//createsubjectInput.val('');
 	});
 
 	$("#create-building-Btn").click(async function () {
-		await CreateBuilding(createbuildingInput.val());
+		await CreateBuilding(createbuildingInput.val(),localStorage.accessToken);
 		await ReloadBuildingData();
 		//
 	});
 
 	$("#create-teacher-Btn").click(async function () {
-		await CreateTeacher(createteacherInput.val());
+		await CreateTeacher(createteacherInput.val(),localStorage.accessToken);
 		await ReloadTeacherData();
 		//
 	});
@@ -280,7 +279,7 @@ async function ReloadGroupData() {
 	groupDataListOptions.empty();
 	GroupData.clear();
 	data = await GetGroups();
-	//	console.log(data)
+		console.log(data)
 	data.forEach((element) => {
 		GroupData.set(element.name, element.id);
 		groupDataListOptions.append(`<option value="${element.name}">`);
@@ -291,7 +290,7 @@ async function ReloadTeacherData() {
 	teacherDataListOptions.empty();
 	TeacherData.clear();
 	data = await GetTeachers();
-	//console.log(data)
+	console.log(data)
 	data.forEach((element) => {
 		TeacherData.set(element.name, element.id);
 		teacherDataListOptions.append(`<option value="${element.name}">`);
@@ -302,7 +301,7 @@ async function ReloadBuildingData() {
 	buildingDataListOptions.empty();
 	BuildingData.clear();
 	data = await GetBuildings();
-	//	console.log(data)
+		console.log(data)
 	data.forEach((element) => {
 		BuildingData.set(element.title, element.id);
 		buildingDataListOptions.append(`<option value="${element.title}">`);
@@ -378,16 +377,16 @@ async function SetRole(login, role, teacherId) {
 
 	try {
 		const response = await fetch(
-			"https://localhost:7056/api/users/" + login + "/role",
+			defaultPath+"/users/" + login + "/role",
 			{
 				method: "PUT",
 				headers: {
-					//Authorization,
+					"Authorization": "Bearer "+localStorage.accessToken,
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					role: role,
-					teacherId: teacherId,
+					role: parseInt(role),
+					teacherId: teacherId==""?null:teacherId,
 				}),
 			}
 		);
@@ -402,7 +401,7 @@ async function DeleteBuilding(buildingId) {
 		const response = await fetch(defaultPath + "/buildings/" + buildingId, {
 			method: "DELETE",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer "+localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
@@ -418,7 +417,7 @@ async function DeleteGroup(groupId) {
 		const response = await fetch(defaultPath + "/groups/" + groupId, {
 			method: "DELETE",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer "+localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
@@ -435,7 +434,7 @@ async function DeleteRoom(roomId) {
 		const response = await fetch(defaultPath + "/buildings/rooms/" + roomId, {
 			method: "DELETE",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer "+localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
@@ -452,7 +451,7 @@ async function DeleteSubject(subjectId) {
 		const response = await fetch(defaultPath + "/subjects/" + subjectId, {
 			method: "DELETE",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer "+localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
@@ -468,7 +467,7 @@ async function DeleteTeacher(teacherId) {
 		const response = await fetch(defaultPath + "/teachers/" + teacherId, {
 			method: "DELETE",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer "+localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
