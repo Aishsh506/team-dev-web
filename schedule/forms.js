@@ -49,6 +49,7 @@ function LessonForms()
         <div class="alert alert-warning d-none" role="alert">
             Недоступно редактирование пар с прошедшей стартовой датой
         </div>`);
+    modal.find(".btn-primary").click(EditLesson);
 
     $('.datepicker').datepicker({
         format: dateFormat,
@@ -147,16 +148,20 @@ async function CreateScheduleElement(type) {
             if ($("#repeatLessonCheckAdd").prop("checked")) {
                 endDateInput = $("#endDateInputAdd").val().split("-").reverse().join("-");
             } else endDateInput = dateInput;
-            await PostLesson({
-                startDate: dateInput,
-                endDate: endDateInput,
-                timeslot: $("#timeslotSelectAdd").val(),
-                teacherId: $("#teacherSelectAdd").val(),
-                roomId: $("#roomSelectAdd").val(),
-                groupId: $("#groupSelectAdd").val(),
-                subjectId: $("#subjectSelectAdd").val(),
-                buildingId: $("#buildingSelectAdd").val()
-            }, localStorage.getItem("accessToken"));
+            try {
+                result = await PostLesson({
+                    startDate: dateInput,
+                    endDate: endDateInput,
+                    timeslot: $("#timeslotSelectAdd").val(),
+                    teacherId: $("#teacherSelectAdd").val(),
+                    roomId: $("#roomSelectAdd").val(),
+                    groupId: $("#groupSelectAdd").val(),
+                    subjectId: $("#subjectSelectAdd").val(),
+                    buildingId: $("#buildingSelectAdd").val()
+                }, localStorage.getItem("accessToken"));
+            } catch(e) {
+                console.log(e);
+            }
             break;
         case "subject":
             result = await CreateSubject($("#subjectName").val(), localStorage.getItem("accessToken"));
@@ -181,4 +186,28 @@ async function CreateScheduleElement(type) {
     }
     else alert("Ошибка при создании элемента расписания");
     $(this)?.attr("disabled", false);
+}
+
+async function EditLesson() {
+    $(this)?.attr("disabled", true);
+    try {
+        dateInput = $("#dateInputEdit").val().split("-").reverse().join("-");
+        endDateInput = $("#endDateInputEdit").val().split("-").reverse().join("-");
+        await PutLesson(activeLessonId, {
+            startDate: dateInput,
+            endDate: endDateInput,
+            timeslot: $("#timeslotSelectEdit").val(),
+            teacherId: $("#teacherSelectEdit").val(),
+            roomId: $("#roomSelectEdit").val(),
+            groupId: $("#groupSelectEdit").val(),
+            subjectId: $("#subjectSelectEdit").val(),
+            buildingId: $("#buildingSelectEdit").val()
+        }, localStorage.getItem("accessToken"));
+    } catch(e) {
+        alert("Ошибка при редактировании расписания");
+        console.log(e);
+    }
+    $(this)?.attr("disabled", false);
+    alert("Изменения сохранены");
+    window.location.reload();
 }

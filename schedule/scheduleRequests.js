@@ -27,14 +27,14 @@ async function PostLesson(lessonDTO, accessToken) {
         },
         body: JSON.stringify(lessonDTO)
     })
-    if (response.ok) return await response.json();
+    if (response.ok) return 200;
     const responseBody = await response.json();
 	console.log(responseBody);
 	throw new Error(response.status);
 }
 
-async function PutLesson(lessonDTO, accessToken) {
-    const response = await fetch(defaultPath + "/lessons", {
+async function PutLesson(id, lessonDTO, accessToken) {
+    const response = await fetch(defaultPath + "/lessons/" + id, {
         method: "PUT",
         headers: {
             "Authorization": "Bearer " + accessToken,
@@ -42,7 +42,7 @@ async function PutLesson(lessonDTO, accessToken) {
         },
         body: JSON.stringify(lessonDTO)
     })
-    if (response.ok) return await response.json();
+    if (response.ok) return 200;
     const responseBody = await response.json();
 	console.log(responseBody);
 	throw new Error(response.status);
