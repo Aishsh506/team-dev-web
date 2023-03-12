@@ -8,12 +8,13 @@ function ToggleEndDatePicker(form)
     $("#endDateInput" + form).val($("#dateInput" + form).val());
 }
 
-function FillInLessonDetails(lessonCard)
+async function FillInLessonDetails(lessonCard)
 {
     lessonCard = $(lessonCard);
     endDate = lessonCard.data("end-date");
     endDate = endDate == null ? lessonCard.data("start-date") : new Date(endDate);
 
+    FillInSelect($("#roomSelectEdit"), await GetRooms(lessonCard.data("building")));
     activeLessonId = lessonCard.attr("id");
     $("#subjectSelectEdit").val(lessonCard.data("subject"));
     $("#buildingSelectEdit").val(lessonCard.data("building"));

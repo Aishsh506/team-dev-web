@@ -50,6 +50,9 @@ function LessonForms()
             Недоступно редактирование пар с прошедшей стартовой датой
         </div>`);
     modal.find(".btn-primary").click(EditLesson);
+    $(`<button type="button" class="btn btn-danger">Удалить пару</button>`)
+        .insertBefore(modal.find(".btn-primary"))
+        .click(LessonDelete);
 
     $('.datepicker').datepicker({
         format: dateFormat,
@@ -205,6 +208,19 @@ async function EditLesson() {
         }, localStorage.getItem("accessToken"));
     } catch(e) {
         alert("Ошибка при редактировании расписания");
+        console.log(e);
+    }
+    $(this)?.attr("disabled", false);
+    alert("Изменения сохранены");
+    window.location.reload();
+}
+
+async function LessonDelete() {
+    $(this)?.attr("disabled", true);
+    try {
+        await DeleteLesson(activeLessonId, localStorage.getItem("accessToken"));
+    } catch(e) {
+        alert("Ошибка при попытке удаления пары");
         console.log(e);
     }
     $(this)?.attr("disabled", false);

@@ -47,3 +47,16 @@ async function PutLesson(id, lessonDTO, accessToken) {
 	console.log(responseBody);
 	throw new Error(response.status);
 }
+
+async function DeleteLesson(id, accessToken) {
+    const response = await fetch(defaultPath + "/lessons/" + id, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + accessToken,
+        }
+    })
+    if (response.ok) return 200;
+    const responseBody = await response.json();
+	console.log(responseBody);
+	throw new Error(response.status);
+}
