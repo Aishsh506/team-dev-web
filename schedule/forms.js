@@ -40,6 +40,7 @@ function LessonForms()
         }, "Конечная дата пары должна быть больше стартовой"))
         CreateScheduleElement("lesson");
     });
+    addLessonForm.removeClass("d-none");
 
     modal = modal.clone().appendTo("#modals").attr("id", "editLessonModal");
     modal.find("h1").text("Редактировать пару");
@@ -151,6 +152,7 @@ function ScheduleElementForms()
         if (Validate($("#teacherName"), val => val != "", "Поле не должно быть пустым"))
         CreateScheduleElement("teacher");
     });
+    $(".schedule-element-form").removeClass("d-none");
 }
 
 async function GenerateSelects()
