@@ -1,4 +1,4 @@
-function GenerateTable(week) {
+async function GenerateTable(week) {
     week = Number.isNaN(week) ? 0 : week;
     weekDate = new Date();
     weekDate = weekDate.addDays(7 * week);
@@ -14,7 +14,7 @@ function GenerateTable(week) {
             break;
         case "byRoom":
             $("#tableHeader").append(`
-                Расписание аудитории ${rooms.find(item => item.id === searchId1)?.name} (${buildings.find(item => item.id === searchId2)?.title})`);
+                Расписание аудитории ${(await GetRooms(searchId2)).find(item => item.id === searchId1)?.name} (${buildings.find(item => item.id === searchId2)?.title})`);
             break;
     }
 
