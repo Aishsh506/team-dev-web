@@ -55,7 +55,7 @@ async function FillInTable()
 {
     let schedule;
     try {
-        schedule = await GetSchedule(weekStart.toISOString(), searchMethod, searchId1);
+        schedule = await GetSchedule(`${weekStart.getFullYear()}-${weekStart.getMonth() + 1}-${weekStart.getDate()}`, searchMethod, searchId1);
     } catch(e) {
         alert("Ошибка при получении расписания с сервера");
         console.log(e.message);
