@@ -5,13 +5,14 @@ function ToggleEndDatePicker(form)
     } else {
         $("#endDateInput" + form).parent().addClass("d-none");
     }
+    $("#endDateInput" + form).val($("#dateInput" + form).val());
 }
 
 function FillInLessonDetails(lessonCard)
 {
     lessonCard = $(lessonCard);
     endDate = lessonCard.data("end-date");
-    endDate = endDate == null ? null : new Date(endDate);
+    endDate = endDate == null ? lessonCard.data("start-date") : new Date(endDate);
 
     activeLessonId = lessonCard.attr("id");
     $("#subjectSelectEdit").val(lessonCard.data("subject"));
@@ -19,11 +20,11 @@ function FillInLessonDetails(lessonCard)
     $("#roomSelectEdit").val(lessonCard.data("room"));
     $("#groupSelectEdit").val(lessonCard.data("group"));
     $("#teacherSelectEdit").val(lessonCard.data("teacher"));
-    $("#dateInputEdit").val(lessonCard.data("start-date").toLocaleString('ru', formDateOptions));
+    $("#dateInputEdit").datepicker("setDate", lessonCard.data("start-date").slice(0, 10).split("-").reverse().join("-"));
     $("#timeslotSelectEdit").val(lessonCard.data("timeslot"));
     $("#repeatLessonCheckEdit").prop("checked", endDate != null);
     ToggleEndDatePicker("Edit");
-    $("#endDateInputEdit").val(endDate?.toLocaleString('ru', formDateOptions));
+    $("#endDateInputEdit").datepicker("setDate", lessonCard.data("end-date").slice(0, 10).split("-").reverse().join("-"));
 
     if(lessonCard.data("start-date") <= new Date()) {
         $(`
@@ -44,8 +45,10 @@ function FillInDateTime(date = "", timeslot = 0)
 {
     if (date == "") {
         $("#dateInputAdd").val("");
+        $("#endDateInputAdd").val("");
     } else {
         $("#dateInputAdd").datepicker("setDate", new Date(date));
+        $("#endDateInputAdd").datepicker("setDate", new Date(date));
     }
     $("#timeslotSelectAdd").val(timeslot);
 }

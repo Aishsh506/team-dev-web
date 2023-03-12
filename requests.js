@@ -44,45 +44,47 @@ async function Refresh(refreshToken) {
 	throw new Error(response.status);
 }
 
-async function CreateGroup(groupName) {
+async function CreateGroup(groupName, accessToken) {
 	console.log("CreatingGroup:" + groupName);
 
 	try {
 		const response = await fetch(defaultPath + "/groups", {
 			method: "POST",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				name: groupName,
 			}),
 		});
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
 }
 
-async function CreateBuilding(buildingName) {
+async function CreateBuilding(buildingName, accessToken) {
 	console.log("CreatingBuilding:" + buildingName);
 
 	try {
 		const response = await fetch(defaultPath + "/buildings", {
 			method: "POST",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				name: buildingName,
 			}),
 		});
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
 }
 
-async function CreateBuilding(buildingId, roomName) {
+async function CreateRoom(buildingId, roomName, accessToken) {
 	console.log("CreatingRoom:" + roomName);
 
 	try {
@@ -91,7 +93,7 @@ async function CreateBuilding(buildingId, roomName) {
 			{
 				method: "POST",
 				headers: {
-					//Authorization:,
+					"Authorization": "Bearer " + accessToken,
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
@@ -99,44 +101,47 @@ async function CreateBuilding(buildingId, roomName) {
 				}),
 			}
 		);
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
 }
 
-async function CreateSubject(subjectName) {
+async function CreateSubject(subjectName, accessToken) {
 	console.log("CreatingSubject:" + subjectName);
 
 	try {
 		const response = await fetch(defaultPath + "/subjects", {
 			method: "POST",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				name: subjectName,
 			}),
 		});
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
 }
 
-async function CreateTeacher(teacherName) {
+async function CreateTeacher(teacherName, accessToken) {
 	console.log("CreatingTeacher:" + teacherName);
 
 	try {
 		const response = await fetch(defaultPath + "/teachers", {
 			method: "POST",
 			headers: {
-				//Authorization:,
+				"Authorization": "Bearer " + accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				name: teacherName,
 			}),
 		});
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}

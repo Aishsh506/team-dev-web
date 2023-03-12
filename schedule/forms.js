@@ -1,13 +1,5 @@
 let addLessonForm = $("#addLesson");
 
-$(document).ready(function() {
-    LessonForms();
-    ScheduleElementForms();
-    GenerateSelects();
-    $(".form-check-label").disableSelection();
-    addLessonForm = $("#addLesson")
-})
-
 function LessonForms()
 {
     selectInput = addLessonForm.find(".select-input").clone();
@@ -40,6 +32,7 @@ function LessonForms()
     modal = $("#newModal").clone().attr("id", "addLessonModal").appendTo("#modals");
     modal.find("h1").text("Добавить пару");
     modal.find(".modal-body").append(addLessonForm);
+    modal.find(".btn-primary").click(async function() {CreateScheduleElement("lesson")});
 
     modal = modal.clone().appendTo("#modals").attr("id", "editLessonModal");
     modal.find("h1").text("Редактировать пару");
@@ -83,6 +76,7 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addSubjectModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить дисциплину");
     emptyModal.find(".modal-body").append(form.clone());
+    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("subject")});
 
     form.attr("id", "addBuilding");
     label.attr("for", "buildingName").html("<b>Название</b>");
@@ -91,6 +85,7 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addBuildingModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить корпус");
     emptyModal.find(".modal-body").append(form.clone());
+    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("building")});
 
     form.attr("id", "addRoom");
     label.attr("for", "roomName").html("<b>Номер</b>");
@@ -104,14 +99,16 @@ function ScheduleElementForms()
             <label for="roomBuildingSelect" class="form-label"><b>Корпус</b></label>
             <select id="roomBuildingSelect" class="form-select"></select>
         </div>`);
+    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("room")});
 
     form.attr("id", "addGroup");
-    label.attr("for", "groupNumber").html("<b>Номер</b>");
-    input.attr("id", "groupNumber");
+    label.attr("for", "groupName").html("<b>Номер</b>");
+    input.attr("id", "groupName");
     emptyModal = $("#newModal").clone();
     emptyModal.attr("id", "addGroupModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить группу");
     emptyModal.find(".modal-body").append(form.clone());
+    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("group")});
 
     form.attr("id", "addTeacher");
     label.attr("for", "teacherName").html("<b>Ф.И.О</b>");
@@ -120,17 +117,68 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addTeacherModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить преподавателя");
     emptyModal.find(".modal-body").append(form);
+    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("teacher")});
 }
 
-function GenerateSelects()
+async function GenerateSelects()
 {
     FillInSelect($("#subjectSelectAdd, #subjectSelectEdit"), subjects);
-    FillInSelect($("#buildingSelectAdd, #buildingSelectEdit, #roomBuildingSelect"), buildings, "title"); 
+    FillInSelect($("#buildingSelectAdd, #buildingSelectEdit, #roomBuildingSelect"), buildings, "title");
     FillInSelect($("#groupSelectAdd, #groupSelectEdit"), groups);
-    FillInSelect($("#teacherSelectAdd, #teacherSelectEdit"), groups);
+    FillInSelect($("#teacherSelectAdd, #teacherSelectEdit"), teachers);
+    FillInSelect($("#roomSelectAdd, #roomSelectEdit"), await GetRooms(buildings[0]?.id));
+
+    $("#buildingSelectAdd").change(async function() {FillInSelect($("#roomSelectAdd"), await GetRooms($("#buildingSelectAdd").val()))});
+    $("#buildingSelectEdit").change(async function() {FillInSelect($("#roomSelectEdit"), await GetRooms($("#buildingSelectEdit").val()))});
 }
 
 function FillInSelect(select, array, displayedText = "name")
 {
+    select.empty();
     array.forEach(item => select.append(`<option value="${item.id}">${item[displayedText]}</option>`));
+}
+
+async function CreateScheduleElement(type) {
+    $(this)?.attr("disabled", true);
+    let result;
+    switch (type) {
+        case "lesson":
+            dateInput = $("#dateInputAdd").val().split("-").reverse().join("-");
+            if ($("#repeatLessonCheckAdd").prop("checked")) {
+                endDateInput = $("#endDateInputAdd").val().split("-").reverse().join("-");
+            } else endDateInput = dateInput;
+            await PostLesson({
+                startDate: dateInput,
+                endDate: endDateInput,
+                timeslot: $("#timeslotSelectAdd").val(),
+                teacherId: $("#teacherSelectAdd").val(),
+                roomId: $("#roomSelectAdd").val(),
+                groupId: $("#groupSelectAdd").val(),
+                subjectId: $("#subjectSelectAdd").val(),
+                buildingId: $("#buildingSelectAdd").val()
+            }, localStorage.getItem("accessToken"));
+            break;
+        case "subject":
+            result = await CreateSubject($("#subjectName").val(), localStorage.getItem("accessToken"));
+            break;
+        case "building":
+            result = await CreateBuilding($("#buildingName").val(), localStorage.getItem("accessToken"));
+            break;
+        case "room":
+            result = await CreateRoom($("#roomBuildingSelect").val(), $("#roomName").val(), localStorage.getItem("accessToken"));
+            break;
+        case "group":
+            result = await CreateGroup($("#groupName").val(), localStorage.getItem("accessToken"));
+            break;
+        case "teacher":
+            result = await CreateTeacher($("#teacherName").val(), localStorage.getItem("accessToken"));
+        default:
+            break;
+    }
+    if (result == 200) {
+        alert("Элемент расписания создан");
+        window.location.reload();
+    }
+    else alert("Ошибка при создании элемента расписания");
+    $(this)?.attr("disabled", false);
 }

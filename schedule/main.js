@@ -4,17 +4,13 @@ let searchMethod;
 let searchId1;
 let searchId2;
 
-let subjects = [
-    { id: "1", name: "Тестирование ПО"},
-    { id: "2", name: "Машинное обучение"},
-    { id: "3", name: "БАЗЫ ДАННЫХ"} ];
-let buildings = [ { id: "b1", title: "Главный корпус" } ];
-let rooms = [ { id: "r1", number: "218" } ];
-let groups = [];
-let teachers = [];
+let subjects;
+let buildings;
+let rooms;
+let teachers;
 
 const formDateOptions = { year: "2-digit", month: "2-digit", day:"2-digit"};
-const dateFormat = "dd.mm.yy";
+const dateFormat = "dd-mm-yyyy";
 const timeslots = [
     "8:45 - 10:20",
     "10:35 - 12:10",
@@ -45,3 +41,19 @@ $.fn.extend({
         }); 
     } 
 });
+
+$(document).ready(async function() {
+    await GetLists();
+
+    const search_params = new URL(window.location.href).searchParams;
+    searchMethod = search_params.get("method");
+    searchId1 = search_params.get("id1");
+    searchId2 = search_params.get("id2")
+    GenerateTable(parseInt(search_params.get("week")));
+    FillInTable();
+
+    LessonForms();
+    ScheduleElementForms();
+    await GenerateSelects();
+    $(".form-check-label").disableSelection();
+})

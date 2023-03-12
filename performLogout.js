@@ -1,5 +1,6 @@
 async function PerformLogout()
 {
+    $("#logoutBtn").attr("disabled", true);
     try { 
         await Logout(localStorage.getItem("accessToken"));
     } catch(e) {
@@ -7,6 +8,7 @@ async function PerformLogout()
     } finally {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        $("#logoutBtn").attr("disabled", false);
         window.location.href = "/login";
     }
 }
