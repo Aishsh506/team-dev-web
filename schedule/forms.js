@@ -32,7 +32,14 @@ function LessonForms()
     modal = $("#newModal").clone().attr("id", "addLessonModal").appendTo("#modals");
     modal.find("h1").text("Добавить пару");
     modal.find(".modal-body").append(addLessonForm);
-    modal.find(".btn-primary").click(async function() {CreateScheduleElement("lesson")});
+    modal.find(".btn-primary").click(function() {
+        if (Validate($("#endDateInputAdd"), val => {
+            startDate = new Date($("#dateInputAdd").val().split("-").reverse().join("-"));
+            endDate = new Date(val.split("-").reverse().join("-"));
+            return startDate <= endDate;
+        }, "Конечная дата пары должна быть больше стартовой"))
+        CreateScheduleElement("lesson");
+    });
 
     modal = modal.clone().appendTo("#modals").attr("id", "editLessonModal");
     modal.find("h1").text("Редактировать пару");
@@ -49,7 +56,14 @@ function LessonForms()
         <div class="alert alert-warning d-none" role="alert">
             Недоступно редактирование пар с прошедшей стартовой датой
         </div>`);
-    modal.find(".btn-primary").click(EditLesson);
+    modal.find(".btn-primary").click(function() {
+        if (Validate($("#endDateInputEdit"), val => {
+            startDate = new Date($("#dateInputEdit").val().split("-").reverse().join("-"));
+            endDate = new Date(val.split("-").reverse().join("-"));
+            return startDate <= endDate;
+        }, "Конечная дата пары должна быть больше стартовой"))
+        EditLesson();
+    });
     $(`<button type="button" class="btn btn-danger">Удалить пару</button>`)
         .insertBefore(modal.find(".btn-primary"))
         .click(LessonDelete);
@@ -80,7 +94,10 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addSubjectModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить дисциплину");
     emptyModal.find(".modal-body").append(form.clone());
-    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("subject")});
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#subjectName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("subject");
+    });
 
     form.attr("id", "addBuilding");
     label.attr("for", "buildingName").html("<b>Название</b>");
@@ -89,7 +106,10 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addBuildingModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить корпус");
     emptyModal.find(".modal-body").append(form.clone());
-    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("building")});
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#buildingName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("building");
+    });
 
     form.attr("id", "addRoom");
     label.attr("for", "roomName").html("<b>Номер</b>");
@@ -103,7 +123,10 @@ function ScheduleElementForms()
             <label for="roomBuildingSelect" class="form-label"><b>Корпус</b></label>
             <select id="roomBuildingSelect" class="form-select"></select>
         </div>`);
-    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("room")});
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#roomName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("room");
+    });
 
     form.attr("id", "addGroup");
     label.attr("for", "groupName").html("<b>Номер</b>");
@@ -112,7 +135,10 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addGroupModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить группу");
     emptyModal.find(".modal-body").append(form.clone());
-    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("group")});
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#groupName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("group");
+    });
 
     form.attr("id", "addTeacher");
     label.attr("for", "teacherName").html("<b>Ф.И.О</b>");
@@ -121,7 +147,10 @@ function ScheduleElementForms()
     emptyModal.attr("id", "addTeacherModal").appendTo($("#modals"));
     emptyModal.find("h1").text("Добавить преподавателя");
     emptyModal.find(".modal-body").append(form);
-    emptyModal.find(".btn-primary").click(async function() {await CreateScheduleElement("teacher")});
+    emptyModal.find(".btn-primary").click(function() {
+        if (Validate($("#teacherName"), val => val != "", "Поле не должно быть пустым"))
+        CreateScheduleElement("teacher");
+    });
 }
 
 async function GenerateSelects()
