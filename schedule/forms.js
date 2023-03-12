@@ -224,7 +224,7 @@ async function EditLesson() {
     $(this)?.attr("disabled", true);
     try {
         dateInput = $("#dateInputEdit").val().split("-").reverse().join("-");
-        if ($("#repeatLessonCheckAdd").prop("checked")) {
+        if ($("#repeatLessonCheckEdit").prop("checked")) {
             endDateInput = $("#endDateInputEdit").val().split("-").reverse().join("-");
         } else {
             endDateInput = dateInput;
