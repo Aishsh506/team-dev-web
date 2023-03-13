@@ -60,7 +60,11 @@ $(function () {
 	$("#create-room-Btn").click(async function () {
 		BuildingId = BuildingData.get(createroombuildingInput.val());
 		createroomInputValue = createroomInput.val();
-		await CreateRoom(BuildingId, createroomInputValue,localStorage.accessToken);
+		await CreateRoom(
+			BuildingId,
+			createroomInputValue,
+			localStorage.accessToken
+		);
 		await ReloadRoomData(BuildingId);
 	});
 
@@ -68,31 +72,42 @@ $(function () {
 		roleSelectValue = roleSelect.val();
 		loginValue = loginInput.val();
 		bindTeacherInputValue = "";
-		if (roleSelectValue == "0" && TeacherData.has(bindTeacherInput.val())) {
-			bindTeacherInputValue = TeacherData.get(bindTeacherInput.val());
+		if (roleSelectValue == "0") {
+			if(Validate(bindTeacherInput,val=>{return TeacherData.has(bindTeacherInput.val()) },"Некорректный преподователь")){
+				bindTeacherInputValue = TeacherData.get(bindTeacherInput.val());
+			}
 		}
-		await SetRole(loginValue, roleSelectValue, bindTeacherInputValue);
+
+		 response=await SetRole(loginValue, roleSelectValue, bindTeacherInputValue);
+		 console.log(response)
+
+		 
+
+		 if(Validate(loginInput,val=>{return response!=404},"Некорректный логин")){
+		 }
 	});
 
 	$("#create-group-Btn").click(async function () {
-		await CreateGroup(creategroupInput.val(),localStorage.accessToken);
+		response=await CreateGroup(creategroupInput.val(), localStorage.accessToken);
+		if(Validate(creategroupInput,val=>{return response!=409},"Такая группа уже существует"))
+		if(Validate(creategroupInput,val=>{return response!=400},"Некорректная группа"))
 		await ReloadGroupData();
 		//creategroupInput.val('')
 	});
 
 	$("#create-subject-Btn").click(async function () {
-		await CreateSubject(createsubjectInput.val(),localStorage.accessToken);
+		await CreateSubject(createsubjectInput.val(), localStorage.accessToken);
 		await ReloadSubjectData();
 	});
 
 	$("#create-building-Btn").click(async function () {
-		await CreateBuilding(createbuildingInput.val(),localStorage.accessToken);
+		await CreateBuilding(createbuildingInput.val(), localStorage.accessToken);
 		await ReloadBuildingData();
 		//
 	});
 
 	$("#create-teacher-Btn").click(async function () {
-		await CreateTeacher(createteacherInput.val(),localStorage.accessToken);
+		await CreateTeacher(createteacherInput.val(), localStorage.accessToken);
 		await ReloadTeacherData();
 		//
 	});
@@ -188,7 +203,8 @@ $(function () {
 	buildingListDropDownInput.focusout(async function () {
 		//Проверка на наличие такого option и получение соответствующего
 		buildingListDropDownInputValue = buildingListDropDownInput.val();
-		if (BuildingData.has(buildingListDropDownInputValue)) {
+
+		if(Validate(buildingListDropDownInput,val=>{return BuildingData.has(buildingListDropDownInputValue)},"Некорректный корпус")){
 			console.log("Такой Корпус Существует");
 			buildingId = BuildingData.get(buildingListDropDownInputValue);
 
@@ -197,13 +213,15 @@ $(function () {
 			if (roomListDropDownInput.prop("disabled")) {
 				roomListDropDownInput.prop("disabled", false);
 			}
-		} else {
+		}
+		else{
 			console.log("Такого корпуса не существует");
 			if (!roomListDropDownInput.prop("disabled")) {
 				roomListDropDownInput.prop("disabled", true);
 				roomListDropDownInput.val("");
 			}
 		}
+		
 	});
 
 	createroombuildingInput.focusout(function () {
@@ -279,7 +297,7 @@ async function ReloadGroupData() {
 	groupDataListOptions.empty();
 	GroupData.clear();
 	data = await GetGroups();
-		console.log(data)
+	console.log(data);
 	data.forEach((element) => {
 		GroupData.set(element.name, element.id);
 		groupDataListOptions.append(`<option value="${element.name}">`);
@@ -290,7 +308,7 @@ async function ReloadTeacherData() {
 	teacherDataListOptions.empty();
 	TeacherData.clear();
 	data = await GetTeachers();
-	console.log(data)
+	console.log(data);
 	data.forEach((element) => {
 		TeacherData.set(element.name, element.id);
 		teacherDataListOptions.append(`<option value="${element.name}">`);
@@ -301,7 +319,7 @@ async function ReloadBuildingData() {
 	buildingDataListOptions.empty();
 	BuildingData.clear();
 	data = await GetBuildings();
-		console.log(data)
+	console.log(data);
 	data.forEach((element) => {
 		BuildingData.set(element.title, element.id);
 		buildingDataListOptions.append(`<option value="${element.title}">`);
@@ -331,38 +349,30 @@ async function ReloadSubjectData() {
 }
 
 function GroupShcedule() {
-	if (GroupData.has(groupListDropDownInput.val())) {
+	if(Validate(groupListDropDownInput,val=>{return GroupData.has(groupListDropDownInput.val())},"Не корректная группа")){
 		console.log("Такая Группа существует");
 		window.location.href =
 			"/schedule/?method=byGroup&id1=" +
 			GroupData.get(groupListDropDownInput.val());
-	} else {
-		console.log("Такая Группа НЕсуществует");
-		//Валидация
 	}
 }
 
 function TeacherShcedule() {
-	if (TeacherData.has(teacherListDropDownInput.val())) {
+	
+	if(Validate(teacherListDropDownInput,val=>{return TeacherData.has(teacherListDropDownInput.val())},"Не корректный преподователь")){
 		console.log("Такой Преподователь есть");
 		window.location.href =
 			"/schedule/?method=byTeacher&id1=" +
 			TeacherData.get(teacherListDropDownInput.val());
-	} else {
-		console.log("Такого Преподователя нет");
-		//Валидация
 	}
+
+
 }
 
 function AuditoriumShcedule() {
-	if (!BuildingData.has(buildingListDropDownInput.val())) {
-		//Такого корпуса нет
-		console.log("Такого корпуса нет");
-	} else if (!RoomData.has(roomListDropDownInput.val())) {
-		//Такой Аудитории нет
-
-		console.log("Такой Аудитории нет");
-	} else {
+	
+	
+	if(RoomData.has(roomListDropDownInput.val())){
 		console.log("Everething Correct");
 		window.location.href =
 			"/schedule/?method=byRoom&id2=" +
@@ -370,26 +380,31 @@ function AuditoriumShcedule() {
 			"&id1=" +
 			RoomData.get(roomListDropDownInput.val());
 	}
+
+	 if(Validate(roomListDropDownInput,val=>{return RoomData.has(roomListDropDownInput.val())},"Не корректный корпус")){
+		
+	}
+	
+	
+
 } //TODO
 
 async function SetRole(login, role, teacherId) {
 	console.log("ChangingRole: " + login + " " + role);
 
 	try {
-		const response = await fetch(
-			defaultPath+"/users/" + login + "/role",
-			{
-				method: "PUT",
-				headers: {
-					"Authorization": "Bearer "+localStorage.accessToken,
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					role: parseInt(role),
-					teacherId: teacherId==""?null:teacherId,
-				}),
-			}
-		);
+		const response = await fetch(defaultPath + "/users/" + login + "/role", {
+			method: "PUT",
+			headers: {
+				Authorization: "Bearer " + localStorage.accessToken,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				role: parseInt(role),
+				teacherId: teacherId == "" ? null : teacherId,
+			}),
+		});
+		return response.status;
 	} catch (e) {
 		console.error(e);
 	}
@@ -401,7 +416,7 @@ async function DeleteBuilding(buildingId) {
 		const response = await fetch(defaultPath + "/buildings/" + buildingId, {
 			method: "DELETE",
 			headers: {
-				"Authorization": "Bearer "+localStorage.accessToken,
+				Authorization: "Bearer " + localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
@@ -417,7 +432,7 @@ async function DeleteGroup(groupId) {
 		const response = await fetch(defaultPath + "/groups/" + groupId, {
 			method: "DELETE",
 			headers: {
-				"Authorization": "Bearer "+localStorage.accessToken,
+				Authorization: "Bearer " + localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
@@ -434,7 +449,7 @@ async function DeleteRoom(roomId) {
 		const response = await fetch(defaultPath + "/buildings/rooms/" + roomId, {
 			method: "DELETE",
 			headers: {
-				"Authorization": "Bearer "+localStorage.accessToken,
+				Authorization: "Bearer " + localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
@@ -451,7 +466,7 @@ async function DeleteSubject(subjectId) {
 		const response = await fetch(defaultPath + "/subjects/" + subjectId, {
 			method: "DELETE",
 			headers: {
-				"Authorization": "Bearer "+localStorage.accessToken,
+				Authorization: "Bearer " + localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
@@ -467,7 +482,7 @@ async function DeleteTeacher(teacherId) {
 		const response = await fetch(defaultPath + "/teachers/" + teacherId, {
 			method: "DELETE",
 			headers: {
-				"Authorization": "Bearer "+localStorage.accessToken,
+				Authorization: "Bearer " + localStorage.accessToken,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({}),
